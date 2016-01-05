@@ -1,0 +1,17 @@
+E:\XAMPP\htdocs\vvfy\css
+E:\XAMPP\htdocs\vvfy\js
+E:\XAMPP\htdocs\vvfy\protected
+E:\XAMPP\htdocs\vvfy\protected\components
+E:\XAMPP\htdocs\vvfy\protected\controllers
+E:\XAMPP\htdocs\vvfy\protected\models
+E:\XAMPP\htdocs\vvfy\protected\runtime
+E:\XAMPP\htdocs\vvfy\protected\views
+E:\XAMPP\htdocs\vvfy\protected\views\client
+E:\XAMPP\htdocs\vvfy\protected\views\land
+E:\XAMPP\htdocs\vvfy\protected\views\layouts
+E:\XAMPP\htdocs\vvfy\protected\views\project
+E:\XAMPP\htdocs\vvfy\protected\views\site
+E:\XAMPP\htdocs\vvfy\protected\views\layouts\junk
+E:\XAMPP\htdocs\vvfy\protected\views\land\form
+E:\XAMPP\htdocs\vvfy\protected\views\client\reload
+E:\XAMPP\htdocs\vvfy\protected\components\views

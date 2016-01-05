@@ -1,0 +1,6 @@
+[General]
+
+Title=Developpers Icons
+Author=Sekkymu
+URL=http://sekkyumu.deviantart.com/art/Developpers-Icons-63052312
+License=License Free

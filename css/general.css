@@ -1,0 +1,11 @@
+@media only screen and (min-width: 600) and (max-width: 760px) {
+	#second{
+	
+		height:10000px;
+		
+		position:relative;
+		background:rgba(0, 0, 0, 0.68);
+	
+	}
+
+}

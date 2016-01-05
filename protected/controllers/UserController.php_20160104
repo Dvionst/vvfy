@@ -1,0 +1,364 @@
+<?php
+
+class UserController extends Controller
+{
+	/**
+	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
+	 * using two-column layout. See 'protected/views/layouts/column2.php'.
+	 */
+	public $layout='admin';
+
+	/**
+	 * @return array action filters
+	 */
+	public function filters()
+	{
+		return array(
+			'accessControl', // perform access control for CRUD operations
+		);
+	}
+
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array(
+			array('allow',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('index','view','create','lostpassword','recovery','resetsuccess','SendResetPass'),
+				'users'=>array('*'),
+			),
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('update','uploadPhoto','ChangePass'),
+				'users'=>array('@'),
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('admin','delete'),
+				'users'=>array('*'),
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
+		);
+	}
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$this->render('view',array(
+			'model'=>$this->loadModel($id),
+		));
+	}
+
+	public function getToken($token)
+    {
+    	if($token==""){$token="null";}
+        $model=User::model()->findByAttributes(array('token'=>$token));
+        if($model===null)
+            throw new CHttpException(404,'The requested page does not exist.');
+        return $model;
+    }
+
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionCreate()
+	{
+		// Yii::import('application.controllers.MemberController');
+		$user=new User;
+		$member=new Member;
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['User'],$_POST['Member']))
+		{
+			$user->attributes=$_POST['User'];
+			$user->repeat_password=$_POST['User']['repeat_password'];
+			$member->attributes=$_POST['Member'];
+			$member->type_account=$_POST['Member']['type_account'];
+
+
+			$user->scenario = 'register';
+			$member->scenario = 'register';
+
+			$user->level=3;
+
+			$valid=$user->validate();
+       		$valid=$member->validate() && $valid;
+			if($valid){
+				$member->email=$user->username;
+				$member->date_register=new CDbExpression('NOW()');
+				$member->code=strtoupper(substr(md5(uniqid(rand(), true)),0,5));
+				$getToken=rand(0, 99999);
+	            $getTime=date("H:i:s");
+	            $user->token=md5($getToken.$getTime);
+				if ($member->save()){
+					if ($user->save()){
+						MemberController::SendMail($member->email,$member->name,$member->code,$user->token);
+						echo CJSON::encode(array(
+			                    'reg'=>'success',
+			                    // 'redirect' => $this->createUrl('land/userme'),
+			                    'email'=>$member->email,
+			            ));
+					}else{
+						echo json_encode($member->getErrors());
+					}
+				}else{
+						echo json_encode($user->getErrors());					
+				}
+
+
+			}else{
+			     echo CJSON::encode(array(
+	                'reg'=>'failed',
+	                'email'=>str_replace('Username','Email',CHtml::error($user,'username')),
+	                'username'=>str_replace('Name','Username',CHtml::error($member,'name')),
+	                'password'=>CHtml::error($user,'password'),
+	                'repeat_password'=>CHtml::error($user,'repeat_password'),
+	                'all'=>Chtml::errorSummary(array($user,$member)),
+	            ));
+			}
+		}
+	}
+
+	public function actionLostPassword()
+	{
+		$user=new User;
+
+		if(isset($_POST['User']))
+		{
+			$user->attributes=$_POST['User'];
+
+			$user->scenario = 'lost_password';
+
+			$valid=$user->validate();
+			if($valid){
+				$user = User::model()->findByAttributes(array('username'=>$user->username));
+				$user->scenario="";
+				$getToken=rand(0, 99999);
+                $getTime=date("H:i:s");
+                $user->token=md5($getToken.$getTime);
+	            $user->save();
+				UserController::SendResetPass($user->username,$user->token);
+				echo CJSON::encode(array(
+	                    'result'=>'success',
+	            ));
+			}else{
+			     echo CJSON::encode(array(
+	                'result'=>'failed',
+	                'error'=>CHtml::error($user,'username'),
+	                'all'=>Chtml::errorSummary($user),
+	            ));
+			}
+		}
+	}
+
+    public function actionRecovery()
+    {
+    	$token=$_REQUEST['token'];
+    	$model=$this->getToken($token);
+        $model->attributes=$_POST['User'];
+        if(isset($_POST['User']))
+        {
+        	$model->scenario="reset_password";
+           	if($model->validate()){
+           		$model->password=$_POST['User']['new_password'];
+	            $model->token="";
+	            $model->save();
+	            $this->redirect(array('user/resetsuccess'));
+           	}
+        }
+        $this->renderpartial('reset_password',array(
+        	'model'=>$model,
+    	));
+    }
+
+    public function actionResetSuccess()
+    {
+    	$this->renderPartial('reset_success');
+    }
+
+	public static function SendResetPass($email,$token)
+    {   
+		Yii::import('ext.yii-mail.YiiMailMessage');
+		$message = new YiiMailMessage;
+		$message->view = "reset_password";
+		$params  = array('email'=>$email,'token'=>$token);
+		$message->setBody($params, 'text/html');
+		$message->subject = "VVFY account - Change password";
+		$message->addTo($email);
+		$message->from = Yii::app()->params['adminEmail'];
+		if (Yii::app()->mail->send($message))
+			return "sukses";
+	}
+
+	public function actionUploadPhoto()
+	{
+		$model = $this->loadModel(Yii::app()->user->name);
+	    if(isset($_POST['User'])) {
+	        $model->image=$_POST['User']['image'];
+	        $rnd = rand(0123456789, 9876543210);    // generate random number between 0123456789-9876543210
+	    	$timeStamp = time();    // generate current timestamp
+	        $uploadedFile = CUploadedFile::getInstance($model, 'image');
+	        if ($uploadedFile != null) {
+		        $fileName = "{$rnd}-{$timeStamp}-{$uploadedFile}";  // random number + Timestamp + file name
+		        $model->image = $fileName;
+	   	 	}
+	        $valid_format = "jpg,png,jpeg,gif";     // Allow the above extensions only.
+	        $model->scenario="upload_photo";
+		    if ($model->save() && $valid_format) {
+		        if (!empty($uploadedFile)) {
+		            $uploadedFile -> saveAs(Yii::app() -> basePath . '/../img/user/' . $fileName); // save images in given destination folder
+		        	echo CJSON::encode(array(
+		                'result'=>'success',
+		                'file'=>Yii::app() -> baseUrl . '/img/user/' . $fileName,
+	            	));
+		        }
+	        }else{
+	        	//print_r($model->getErrors());
+        		echo CJSON::encode(array(
+	                'result'=>'failed',
+	                'file'=>Yii::app() -> baseUrl . '/img/user/notfound.jpg',
+	                'error'=>str_replace("</div>", "", str_replace('<div class="errorMessage">', '', CHtml::error($model,'image'))),
+            	));
+	        }
+   		}
+	}
+
+	public function actionChangePass()
+	{
+		$user=new User;
+
+		if(isset($_POST['User']))
+		{
+			$user=$this->loadModel(Yii::app()->user->name);
+			$user->old_password=$_POST['User']['old_password'];
+			$user->new_password=$_POST['User']['new_password'];
+			$user->new_password_repeat=$_POST['User']['new_password_repeat'];
+			$user->scenario = 'change_password';
+			$user->current_password=$user->password;
+			if($user->validate()){
+				$user->password=$user->new_password;
+				if($user->save()){
+					echo CJSON::encode(array(
+		                    'result'=>'success',
+		                    'message'=>'You password has been changed.'
+		            ));
+				}else{
+					print_r($user->getErrors());
+				}
+			}else{
+			     echo CJSON::encode(array(
+	                'result'=>'failed',
+	                'old'=>CHtml::error($user,'old_password'),
+	                'new'=>CHtml::error($user,'new_password'),
+	                'confirm'=>CHtml::error($user,'new_password_repeat'),
+	                'all'=>Chtml::errorSummary($user),
+	            ));
+			}
+		}
+	}	
+
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionUpdate($id)
+	{
+		$model=$this->loadModel($id);
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['User']))
+		{
+			$model->attributes=$_POST['User'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->username));
+		}
+
+		$this->render('update',array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionDelete($id)
+	{
+		if(Yii::app()->request->isPostRequest)
+		{
+			// we only allow deletion via POST request
+			$this->loadModel($id)->delete();
+
+			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+			if(!isset($_GET['ajax']))
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		}
+		else
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+	}
+
+	/**
+	 * Lists all models.
+	 */
+	public function actionIndex()
+	{
+		
+		// $dataProvider=new CActiveDataProvider('User');
+		$this->renderPartial('back',array(
+			// 'dataProvider'=>$dataProvider,
+		));
+	}
+
+	/**
+	 * Manages all models.
+	 */
+	public function actionAdmin()
+	{
+		$model=new User('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['User']))
+			$model->attributes=$_GET['User'];
+
+		$this->render('admin',array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Returns the data model based on the primary key given in the GET variable.
+	 * If the data model is not found, an HTTP exception will be raised.
+	 * @param integer the ID of the model to be loaded
+	 */
+	public function loadModel($id)
+	{
+		$model=User::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
+	}
+
+	/**
+	 * Performs the AJAX validation.
+	 * @param CModel the model to be validated
+	 */
+	protected function performAjaxValidation($model)
+	{
+		if(isset($_POST['ajax']) && $_POST['ajax']==='user-form')
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+	}
+}

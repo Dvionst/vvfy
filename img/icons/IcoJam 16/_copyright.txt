@@ -1,0 +1,6 @@
+[General]
+
+Title=16x16 Web Development Icons
+Author=Andrew Zhebrakov and Stan Khodjaev
+URL=http://www.icojam.com
+License=Public Domain

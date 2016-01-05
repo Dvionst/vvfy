@@ -1,0 +1,133 @@
+<div id="team">
+	<div class="wrapper-down" id="our-work" >
+		<!-- <h2>THE TEAM</h2>
+		<ul id="menu-right" class="mr-4">
+			<li><a href="#first"><div class="up2"></div></a></li>
+			<li><a   id="mn-prem" href="#premium">PREMIUM</a> </li>
+			<li><a   id="mn-our" href="#our-work">Our Work   </a></li>
+			<li><a style 
+			="color:#F5B800"  id="mn-team" href="#team">The team </a></li>
+			-->
+		</ul>
+	</div>
+	<div id="member-image">
+		<div class="content">
+			<img class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/founder-new.jpg"  />
+			<p class="name">Jad</p>
+			<p class="jab">founder</p>
+		</div>
+		<!--
+		<div class="content">
+			<img class="member" data-src="img/majd.png"  />
+			<p class="name">Majd</p>
+			<p class="jab">operation manager</p>
+		</div>
+		-->
+		<div class="content" style="">
+			<img class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/arif-new.png"  />
+			<p class="name">Arief</p>
+			<p class="jab">head of cgi dep</p>
+		</div>
+		<div class="content">
+			<img class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/rizki-new.jpg"  />
+			<p class="name">Riki</p>
+			<p class="jab">3d artist</p>
+		</div>
+		<div class="content">
+			<img style="visibility:hidden;" class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/founder-new.jpg"  />
+			<p class="name">&nbsp;</p>
+			<p class="jab">&nbsp;</p>
+		</div>
+		<div class="content">
+			<img class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/yuda-new.jpg"  />
+			<p class="name">Yuda</p>
+			<p class="jab">senior 3d artists</p>
+		</div>
+		<div class="content">
+			<img data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/try-new.jpg" class="member"  />
+		<p class="name">Try</p>
+			<p class="jab">Developer</p>
+		</div>
+		
+	</div>
+		<div id="information-us">
+			<div class="wrap-info-foot">
+				<div class="content link">
+					<ul>
+						<li class="strong" >ABOUT</li>
+						<li class="desc-vv plus">
+							<div class="normal" >VVfy.me</div> is an art and tech studio dedicated to incorporate 
+							the latest visual inventions in form of services for
+							architects and designers.
+							
+							<div class="enter"></div></br>our team is a mix of architects, designer, 3D artists and developers. </br> our business is founded
+							in beirut - Lebanon and operates </br>from Bandung - Indonesia
+		
+						</li>
+					</ul>
+				</div>
+				
+				<div class="content link mobview1">
+					<ul>
+						<li class="strong" >SERVICES</li>
+						<li><img class="img-contact-foot circle-img" src="<?php echo Yii::app()->request->baseUrl; ?>/img/circle.png"/>Realistic archviz</li>
+						<li><img class="img-contact-foot circle-img" src="<?php echo Yii::app()->request->baseUrl; ?>/img/circle.png"/>Premium Account</li>	
+						<li><img class="img-contact-foot circle-img" src="<?php echo Yii::app()->request->baseUrl; ?>/img/circle.png"/>Animation</li>
+						<li><img class="img-contact-foot circle-img" src="<?php echo Yii::app()->request->baseUrl; ?>/img/circle.png"/>Online 3D apps</li>
+						<li><img class="img-contact-foot circle-img" src="<?php echo Yii::app()->request->baseUrl; ?>/img/circle.png"/>Web development</li>
+					</ul>
+				</div>
+				<!--
+				<div class="content link">
+					<ul>
+						<li class="desc-vv">
+							our team is a mix of</br> architects, designer,</br> 3D artists and developers,</br> our business is founded
+							in </br>beirut - Lebanon and operates </br>from Bandung - Indonesia
+						</li>
+					
+					</ul>
+				</div>
+				-->
+				<div style="" class="content link mobview2">
+					<ul>
+						<li class="strong" >CONTACT</li>
+						<li><img class="img-contact-foot" src="<?php echo Yii::app()->request->baseUrl; ?>/img/post.png"/>support@<div class="normal" >VVfy.me</div></li>
+						<li><img class="img-contact-foot" src="<?php echo Yii::app()->request->baseUrl; ?>/img/phone.png"/>+961-3-426871</li>
+					</ul>
+				</div>
+				<div class="socials_wrapper" style="display:none;float: right;margin-right: 170px;">
+					<ul class="socials_list">
+						<li><a class="sosmed sos-facebook" target="_blank" href="http://facebook.com" title="Facebook"></a></li>
+						<li><a class="sosmed sos-twitter" target="_blank" href="http://twitter.com" title="Twitter"></a></li>
+						<li><a class="sosmed sos-google" target="_blank" href="http://google.com" title="Google"></a></li>
+						<li><a class="sosmed sos-youtube" target="_blank" href="http://youtube.com" title="Youtube"></a></li>
+					</ul>
+				</div>
+			</div>
+	</div>
+	
+	<div id="bottom-footer">
+		<div class="wrp-img">
+			<img style="width:240px;height:auto;border:0px;" data-src="img/gambar.png"  />
+			<p>copyright reserved vvfy.me 2015</p>
+		</div>
+		
+		<div class="foot content link ">
+		<ul>
+			<li>Home</li>
+			<li>Premium</li>	
+			<li>Our Work</li>
+			<li>Our Work</li>
+		</ul>
+		</div>
+	
+		<div class="foot content link ">
+			<ul>
+				<li>Instant  Offer</li>
+				<li>Customize Your Package</li>
+				<li>User Benefits</li>
+			</ul>
+		</div>
+					
+	</div>
+</div>

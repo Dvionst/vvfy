@@ -1,0 +1,6 @@
+[General]
+
+Title=Blueberry Basic
+Author=Andrew Zhebrakov
+URL=http://www.icojam.com/blog/?p=259
+License=Public Domain

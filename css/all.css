@@ -1,0 +1,59 @@
+	/*biar gk ada space kosong dikanan*/
+	body {
+	  width: auto !important;
+	  overflow-x: hidden !important;
+	}
+
+
+	@font-face {
+		font-family: Raleway-Light;
+		src: url('font/Raleway-Light.ttf');
+	}
+
+
+	@font-face {	
+		font-family: Raleway-Thin;
+		src: url('font/Raleway-Thin.ttf');
+	}
+
+	@font-face {
+		font-family: Raleway-Bold;
+		src: url('font/Raleway-Bold.ttf');
+	}
+
+	* {
+	
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+	}
+
+	* {
+	  box-sizing: border-box;
+	  -moz-box-sizing: border-box;
+	  -webkit-box-sizing: border-box;
+	}
+
+	body {
+		-webkit-font-smoothing: antialiased;
+		text-shadow: rgba(0,0,0,.01) 0 0 100px;	
+	}
+
+
+	::-webkit-input-placeholder {
+	   text-transform: uppercase;
+	}
+
+	:-moz-placeholder { 
+	   text-transform: uppercase;
+	}
+
+	::-moz-placeholder {  
+	   text-transform: uppercase;
+	}
+
+	:-ms-input-placeholder { 
+	   text-transform: uppercase;
+	}

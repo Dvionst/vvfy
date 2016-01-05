@@ -1,0 +1,6 @@
+[General]
+
+Title=OneBit Icon Set
+Author=Stan Khodjaev
+URL=http://www.icojam.com
+License=Public Domain

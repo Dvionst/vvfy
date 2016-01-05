@@ -1,0 +1,6 @@
+[General]
+
+Title=Danish Royalty Free
+Author=Jonas Rask
+URL=http://jonasraskdesign.com
+License=License Free

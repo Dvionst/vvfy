@@ -1,0 +1,6 @@
+[General]
+
+Title=Batch Icons
+Author=Adam Withcroft
+URL=http://adamwhitcroft.com/batch/
+License=Attribution Encouraged

@@ -1,0 +1,313 @@
+<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/land.css">
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js"></script>
+
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-ui.js"></script>
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/normalize.css" rel="stylesheet" type="text/css" media="all" />
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/pro-bars.min.css" rel="stylesheet" type="text/css" media="all" />
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/style.min.css" rel="stylesheet" type="text/css" media="all" />
+
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/smoothscroll.min.js" type="text/javascript"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/appear.min.js" type="text/javascript"></script>
+<!--
+	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/backbone.js" type="text/javascript"></script>
+-->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/pro-bars.min.js" type="text/javascript"></script>
+<link  href='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/fullcalendar.css' rel='stylesheet' />
+<link  href='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/lib/moment.min.js'></script>
+<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/fullcalendar.min.js'></script>
+<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/msdropdown/jquery.dd.min.js'></script>
+<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.timer.js'></script>
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/msdropdown/dd.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/msdropdown/sprite.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/msdropdown/skin2.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/msdropdown/sprite.css" />
+
+
+
+<div id="overlay"></div>
+<div id ="form-project" class="modal content clearfix">
+	<a href="#" class="hidemodal"><img src="<?php echo Yii::app()->request->baseUrl ?>/img/delete.ico"> </a>
+	<div class="modalbody">
+		
+		<div class="leftpad">
+			
+			<div class="block">
+				<span class="icons block icon-edit"></span>
+				<h1>Add Project</h1>
+			</div>
+			
+			<?php $form=$this->beginWidget('CActiveForm', array(
+				'id'=>'project-form',
+				'enableAjaxValidation'=>false,
+				'action'=>Yii::app()->createAbsoluteUrl("Project/new"),
+				'htmlOptions'=>array(
+				'class'=>"default clearfix",
+				)
+			)); ?>
+			<div class="formrow">
+				<label for="projectName">Project Name</label>
+			<input type="text" name="name" value="" required id="projectName" class="formelement required" maxlength="100">		</div>
+			<!--
+				<div class="formrow">
+				<label for="description">Description</label>
+				<textarea name="description" cols="40" rows="10" id="description" class="formelement small format tidy"></textarea>		</div>
+			-->
+			<div class="formrow">
+				<label for="clientID">Client</label>
+				<select required  name="member" id="clientID" class="formelement">
+					<option value="0">Select a clien</option>
+					<?php foreach (Member::model()->findAll() as $member): ?>
+					<option value="<?php echo $member->id ?>"><?php echo $member->name ?></option>
+					<?php endforeach; ?>
+					<option style="display:none" value="new">add client</option>
+				</select>			
+			</div>
+			
+			<div class="formrow">
+				<label for="clientID">Add files</label>
+				<input  name="fileupload[]" multiple type="file" >		
+			</div>
+			<div class="formrow">
+				<label for="clientID">Description on calendar</label>
+				<input required  type="text" name="descriptionca"  class="formelement required"   >		
+			</div>
+			<div class="showdates">
+				<div class="formrowm">
+					<label for="startDate" class="disabled" disabled="disabled">Start</label>
+					<input required type="date" name="start" value="<?php echo date('Y-m-d') ?>" id="startDate" class="formelement datebox small hasDatepicker disabled" >			
+				</div>
+				
+				<div class="formrow">
+					<label for="dueDate" class="disabled" disabled="disabled">Due</label>
+					<input required type="date" name="due" value="<?php echo date('Y-m-d') ?>" id="dueDate" class="formelement datebox small hasDatepicker disabled"  >			
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="formrow buttons">
+			<style>
+				.loader-form-add{
+					display:none;
+				}
+			</style>
+			<img class="loader-form-add" src="<?php echo Yii::app()->request->baseUrl; ?>/img/big-loader.gif" style="width:20px" >
+			<input id="submit-add-project" type="submit" value="Save" class="button updateprojects">
+			<div class="formloading"></div>
+		</div>		
+		<!--
+			</form>
+		-->
+		<?php $this->endWidget(); ?>
+	</div>
+</div>
+<div id="form-add-schedule">
+	<H3>ADD SCHEDULE ON THIS PROJECT</H3>
+	<img class="close-form-add-category" style="width:20px;position:absolute;top:45px;right:25px;" src="<?php echo Yii::app()->request->baseurl; ?>/img/delete.ico">
+	<form id="add-schedule-form">
+		<table cellpadding="">
+			<tr  style="display:none"><td>project id</td><td><input id="schedule_project_id" class="input-category" name="Calendar[project_id]" type="text" required ></td></tr>
+			<tr><td>Date</td><td><input class="input-category" value="<?php echo date("Y-m-d"); ?>" name="Calendar[due_date]" type="date" required ></td></tr>
+			<tr style="display:none"><td>Date</td><td><input class="input-category" value="<?php echo date("Y-m-d"); ?>" name="Calendar[start_date]" type="date" required ></td></tr>
+			<tr><td>Description</td><td><textarea id="proj-sch-textarea" style="width:170px" maxlength="20" max="20" class="textarea-category" name="Calendar[description]"  required ></textarea></td></tr>
+			<tr><td></td><td style="color:gray" id="chars"></td></tr>
+			<tr><td>
+			<img class="loader-form-add" src="<?php echo Yii::app()->request->baseUrl; ?>/img/big-loader.gif" style="width:20px" >
+			<input type="submit" id="submit-add-schedule" value="save"></td></tr>
+		</table>
+	</form>
+</div>
+<style>
+	#form-set-user table{
+		width:500px;
+	}
+	#form-set-user table thead tr td{
+		border-bottom:1px solid black ;
+		
+	}
+	#form-set-user{
+		-webkit-border-radius:10px;
+		-moz-border-radius:10px;
+		border-radius:10px;
+		width:600px;
+		position:fixed;
+		z-index  :909;
+		top:100px;
+		left:30%;
+		right:30%;
+		background:white;
+		border:1px solid black;
+		padding:20px;
+		display:none;
+	}
+</style>
+<div id="form-set-user">
+	<H3>SET USER ON THIS PROJECT<img style="width:30px;" src="<?php echo Yii::app()->request->baseUrl; ?>/img/land-plus.png"></H3>
+	<img class="close-form-add-category" style="width:20px;position:absolute;top:45px;right:25px;" src="<?php echo Yii::app()->request->baseurl; ?>/img/delete.ico">
+	<form id="add-schedule-form">
+		<table cellpadding="">
+			<tr  style="display:none"><td>project id</td><td><input id="schedule_project_id" class="input-category" name="Calendar[project_id]" type="text" required ></td></tr>
+			<tr style="display:none"><td>Date</td><td><input class="input-category" value="<?php echo date("Y-m-d"); ?>" name="Calendar[start_date]" type="date" required ></td></tr>
+			<tr><td></td><td style="color:gray" id="chars"></td></tr>
+			<thead>
+			<tr>
+				<td>No</td>
+				<td>Name</td>
+				<td>Task</td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<?php ?>
+				<td>1</td>
+				<td>
+				
+				<select class="select-user" name="payments" style="width:250px;">
+					<option value="0" >select user</option>
+				<?php 
+					$user = Project::model()->findByPk($de[id])->worker;
+					foreach (Team::model()->findAll() as $tim) :?>
+					<option <?php if ($user==$tim[id]) echo "selected";   ?> value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/<?php echo $tim->image ?>" data-description=""></option>
+				<?php endforeach ;?>
+			
+			</select>
+				
+				</td>
+				<td>
+					
+				<select class="combo-t" >
+					<?php
+					$task = Project::model()->findByPk($de[id])->task;
+					foreach (Task::model()->findAll() as $d){ ?>
+					<option <?php if ($task==$d[id]) echo "selected";   ?> value="<?php echo $d->id ?>"><?php echo $d->name ?></option>
+					<?php }?>
+				</select>
+			
+				</td>
+			</tr>
+			</tbody>
+			
+			<tr>
+			<td>
+			<img class="loader-form-add" src="<?php echo Yii::app()->request->baseUrl; ?>/img/big-loader.gif" style="width:20px" >
+			<input type="submit" id="submit-add-schedule" value="save"></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div id ="form-comment" class="modal content clearfix">
+	<a href="#" class="hidemodal"><img src="<?php echo Yii::app()->request->baseUrl ?>/img/delete.ico"> </a>
+	<div class="modalbody">
+		
+		
+		<div class="block">
+			<span class="icons block icon-edit"></span>
+			<h1>COMMENT FORM</h1>
+			<img class="loader-row-form" style="width:20px;height:auto;position:absolute;top:0px;right:0px;" src="<?php echo Yii::app()->request->baseUrl ?>/img/big-loader.gif">
+		</div>
+		<div class="formrow">
+			<label for="projectName">List Comment</label>
+			<?php
+				$data = Yii::app()->db->createCommand()
+				->select("id")
+				->from('project_comment_head')
+				->queryAll();
+			?>
+			<select id="comment-list">
+				<option value=" ">select</option>
+				<?php foreach ($data  as $d): ?>
+				<option value="<?php echo $d['id']?>"><?php echo "comment : ". $d['id']?></option>
+				<?php endforeach; ?>
+				<option value="new">NEW</option>
+			</select>
+			
+		</div>
+		
+		<?php $form=$this->beginWidget('CActiveForm', array(
+			'id'=>'comment-form',
+			'enableAjaxValidation'=>false,
+			'action'=>Yii::app()->createAbsoluteUrl("Project/savecomment"),
+			'htmlOptions'=>array(
+			'class'=>"default clearfix",	
+			'enctype'=>'multipart/form-data',
+			)
+		)); ?>
+		<script>
+		</script>
+		<input id="type_comment" name="type" value="1"  type="hidden" >
+		<input id="project_id" name="project_id" value=""  type="hidden" >
+		<div id="list-comment-multiple" class="formrow"></div>
+		<?php $this->endWidget(); ?>	
+		
+		
+		<div class="clear"></div>
+		
+		<div class="showsharing clearfix">
+			<div class="owners  clearfix">
+				<div style="display:none" class="ownerpicker">
+					<h5>Users</h5>
+				</div>
+			</div></div>
+	</div>
+</div>
+</div>
+<!--  progres form-->
+<div id ="form-progres" class="modal content clearfix">
+	<a href="#" class="hidemodal"><img src="<?php echo Yii::app()->request->baseUrl ?>/img/delete.ico"> </a>
+	<div class="modalbody">
+		<div class="leftpad">
+			
+			<div class="block">
+				<span class="icons block icon-edit"></span>
+				<h1>PROGRESS FORM</h1>
+				<img class="loader-row-form" style="width:20px;height:auto;position:absolute;top:0px;right:0px;" src="<?php echo Yii::app()->request->baseUrl ?>/img/big-loader.gif">
+				
+			</div>
+			<div class="formrow">
+				<label for="projectName">List Progres</label>
+				<?php
+					$data = Yii::app()->db->createCommand()
+					->select("id")
+					->from('project_comment_head')
+					->where('type=2')
+					->queryAll();
+				?>
+			<select id="progres-list"></select></div>
+			<?php $form=$this->beginWidget('CActiveForm', array(
+				'id'=>'comment-form',
+				'enableAjaxValidation'=>false,
+				'action'=>Yii::app()->createAbsoluteUrl("Project/savecomment"),
+				'htmlOptions'=>array(
+				'class'=>"default clearfix",	
+				'enctype'=>'multipart/form-data',
+				)
+			)); ?>
+			<script>
+			</script>
+			<input id="progres_project_id" name="project_id" value=""  type="hidden" >
+			<input id="type_comment" name="type" value="2"  type="hidden" >
+			<div id="list-progres-multiple" class="formrow"></div>
+			<?php $this->endWidget(); ?>	
+			<div class="clear"></div>
+			
+			<div class="showsharing clearfix">
+				<div class="owners  clearfix">
+					<div style="display:none" class="ownerpicker">
+						<h5>Users</h5>
+						
+						
+					</div>
+				</div>		
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--akhri -->
+<div id="status"></div>
+<div id="form-add">
+</div>
+<div id="wrapper">
+
+	<?php include('content.php') ?>	
+</div>

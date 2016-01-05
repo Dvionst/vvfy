@@ -1,0 +1,6 @@
+[General]
+
+Title=24×24 Web Development Icons
+Author=Andrew Zhebrakov
+URL=http://www.icojam.com
+License=Public Domain
