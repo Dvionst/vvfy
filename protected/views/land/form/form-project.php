@@ -33,10 +33,10 @@
 				</select>			
 			</div>
 			
-			<div class="formrow">
+			<!-- <div class="formrow">
 				<label for="clientID">Add files</label>
 				<input  name="fileupload[]" multiple type="file" >		
-			</div>
+			</div> -->
 			<div class="formrow">
 				<label for="clientID">Description on calendar</label>
 				<input required  type="text" name="descriptionca" value="due date "  class="formelement required"   >		

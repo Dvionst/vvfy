@@ -6,7 +6,26 @@ class ProjectController extends Controller
 	public function _construct(){
 
 	}
+	public function actionGetDeadline(){
+		// echo "deadline";	
+		$id = Yii::app()->user->id;
+		if (Yii::app()->user->level()=='3'){		
+			$id_member = Member::model()->find("TRIM(email) = '$id'")->id;
+		}else{
+			$id_member = MemberSub::model()->find("TRIM(email) = '$id'")->id_member;
+		}
+		$project = Project::model()->findAll("id_member = '$id_member' ");
+		$array = array();
+		foreach ($project as $key) {
+			$array[] = $key->due_date;
+		}
 
+		echo json_encode($array);
+
+
+
+
+	}
 	public function actionCreate(){
 		// echo "masuk";
 		$transaction = Yii::app()->db->beginTransaction();
@@ -57,7 +76,7 @@ class ProjectController extends Controller
 		// $this->layout = "land";
 		$this->renderPartial('detail_project');
 	}
-	public function actionGetgambar($id){
+	public function actionGetgambar($idp){
 	
 		$user = Yii::app()->user->id;
 		if (Yii::app()->user->level()=='3'){		
@@ -66,8 +85,9 @@ class ProjectController extends Controller
 			$id_member = MemberSub::model()->find("TRIM(email) = '$user'")->id_member;
 
 		}
-	
+		/*
 		$sql = "SELECT 
+		p.id idp,
 		pv.view_name name_view, 
 		pv.id idviews ,
 		project_name,
@@ -119,25 +139,60 @@ class ProjectController extends Controller
 		 
 		GROUP BY pdm.project_views_id
 		ORDER BY pv.created_date DESC";
-
 		// echo $sql;
 		$model = Yii::app()->db->createCommand($sql)->queryRow();
+		*/
+		// $sql = "select * from project_views where project_id = '$idp' ";
+		// $sql = "SELECT pv.id idviews ,ph.datetime, ph.project_id, 
+		$sql = "
+		select
+		pdm.name_file,pdm.id as id_comment,
+		SUBSTRING_INDEX(pdm.name_file,'.',-1) AS ext
+		FROM
+		project AS p 
+		INNER JOIN 
+		project_views AS pv
+		ON p.id = pv.project_id
+		INNER JOIN
+		project_comment_head AS ph 
+		ON pv.id = ph.project_views_id
+		INNER JOIN
+
+		(select * from project_comment order by id desc)
+		 AS pdm
+		ON pdm.head_project_id = ph.id
+		where 
+		p.id_member = '$id_member'
+		and
+		pdm.status = 1 
+		and
+		SUBSTRING_INDEX(pdm.name_file,'.',-1) in ('jpg','png','gif','PNG','JPG','GIF')
+		and 
+		p.id = '$idp'
+		GROUP BY pv.id
+		ORDER BY pv.created_date DESC
+
+		";
+		// echo $sql;
+		$model = Yii::app()->db->createCommand($sql)->queryAll();
+		// echo $sql;
+		$this->renderPartial("application.views.client.get.getgambar",array('model'=>$model));
 		// print_r($model);
-		$array = array();
-		$array["name_file"] = $model["name_file"];
-		$array["id_comment"] = $model["id_comment"];
-		$array["name_view"] = $model["name_view"];
-		$array["description"] = $model["description"];
-		$array["confirmer"] = $model["confirmer"];
-		$array["project_name"] = $model["project_name"];
-		$array["phase"] = $model["phase"];
+		// $array = array();
+		// $array["name_file"] = $model["name_file"];
+		// $array["id_comment"] = $model["id_comment"];
+		// $array["name_view"] = $model["name_view"];
+		// $array["description"] = $model["description"];
+		// $array["confirmer"] = $model["confirmer"];
+		// $array["project_name"] = $model["project_name"];
+		// $array["phase"] = $model["phase"];
 		// $array["budget"] = 0;
 		// $array["number_views"] = $model["number_views"];
 		// $array["status"] = Status::model()->findByPk($model["status"])->name;
 		// $array["team"] = $model["worker"];
-		echo json_encode($array);
+		// echo json_encode($array);
 
-
+		
 
 	}
 	public function actionGetdetailproject($id){
@@ -149,17 +204,19 @@ class ProjectController extends Controller
 
 		FROM 
 		project p
-		INNER JOIN 
+		left JOIN 
 		project_comment_head pch
 		ON 
 		p.id = pch.project_id
-		INNER JOIN
+		left JOIN
 		(
 			SELECT COUNT(*) jumlah_v,project_id FROM project_views WHERE 
 			project_id = '$id'
 		) AS pv
 		ON 
 		p.id = pv.project_id
+		where p.id = '$id'
+
 		GROUP BY p.id
 		ORDER BY pch.datetime DESC
 		";
@@ -167,6 +224,7 @@ class ProjectController extends Controller
 		$model = Yii::app()->db->createCommand($sql)->queryRow();
 		// print_r($model);
 		$array = array();
+		$array["id"] = $model["id"];
 		$array["due_date"] = $model["due_date"];
 		$array["latest_upload"] = $model["latest_upload"];
 		$array["budget"] = 0;
@@ -255,13 +313,22 @@ class ProjectController extends Controller
 	}
 
 	public function actionSetReject(){
-		// echo $_REQUEST[id];
 		if (isset($_REQUEST['id'])){	
 			$model = ProjectComment::model()->findByPk($_REQUEST['id']);
 			$model->status = 2;
-			$model->save();
-				// $this->redirect(array('land/uploaded'));
-				// echo "sukses";
+			if ($model->save()){
+				//notifikasi untuk team
+				$notif = new NotifTeam;
+				$notif->tanggal = date('Y-m-d H:i:s');
+				$notif->judul = "VVFY Notification ";
+				$notif->keterangan = "Hello the team , vvfy just reject your progres becasuse some reasons thank you  ";
+				$notif->username  = 'arief' ;
+				$notif->url  = "vvfy.me";
+				$notif->is_baca  = "0";
+				if ($notif->save())
+					echo "sukses";
+
+			}
 		}
 	}
 
@@ -276,75 +343,53 @@ class ProjectController extends Controller
 		}
 	}
 	public function actionUpdateWorkerDashboard(){
-
-		if ($_REQUEST[project_id]!=0){
-			//$project = Project::model()->find("id = $_REQUEST[project_id] and status = 1 ");
-			//$project->worker =  $_REQUEST['worker'];
-			//$model_update =Project::model()->updateAll(array( 'worker' => 0 ), "worker = $_REQUEST[worker] and status!=5" );
-			//if ($model_update){
-				// $dataAll = Project::model()->findAll("worker = $_REQUEST[worker] and status!=5");
-				// foreach ($dataAll as $dl):
-					// $dl->worker = 0;
-					// $dl->save();
-				// endforeach;
-				
-				// ProjectDetail::model()->updateAll(array( 'doing' => 0 ));
-				// $exist = ProjectDetail::model()->count("worker_id = $_REQUEST[worker] and project_id=$_REQUEST[project_id]");
-				// $record = ProjectDetail::model()->find("worker_id = $_REQUEST[worker] and project_id=$_REQUEST[project_id]");
-				$record = ProjectDetail::model()->find("worker_id = $_REQUEST[worker] and project_id=$_REQUEST[project_id]");
-				// $record->doing = 
+		// print_r($_REQUEST[data]);
+		$inc = 0;
+		foreach ($_REQUEST[data] as $d) {
+			$worker = $_REQUEST[data][$inc][worker];
+			$project = $_REQUEST[data][$inc][project_id];
+			$due_date = $_REQUEST[data][$inc][due_date];
+			if ($_REQUEST[data][$inc][project_id]!=0){
+				$record = ProjectDetail::model()->find("worker_id = '$worker' and project_id='$project' ");
 				if (count($record)==0){
-					ProjectDetail::model()->deleteAll("worker_id = $_REQUEST[worker]");
-					ProjectDetail::model()->updateAll(array( 'doing' => 0 ), "worker_id = $_REQUEST[worker]" );
-					$pd = new ProjectDetail;
-					$pd->project_id = $_REQUEST[project_id];
-					$pd->worker_id = $_REQUEST[worker];
-					$pd->task_id = 1;
-					$pd->doing = 1;
-					$pd->save();
+					ProjectDetail::model()->deleteAll("worker_id = '$worker' ");
+					ProjectDetail::model()->updateAll(array( 'doing' => 0 ), "worker_id = '$worker' " );
+					
+					//echo $_REQUEST[data][$inc][project_id]." = ";
+					if (is_array($_REQUEST[data][$inc][project_id])){
+
+						foreach ($_REQUEST[data][$inc][project_id] as $s) {
+							$pd = new ProjectDetail;
+							$pd->project_id = $s;
+							$pd->worker_id = $worker;
+							$pd->task_id = 1;
+							$pd->doing = 1;
+							if ($pd->save())
+								echo "array saved";
+						}
+					}else{
+						$pd = new ProjectDetail;
+						$pd->project_id = $_REQUEST[data][$inc][project_id];
+						$pd->worker_id = $worker;
+						$pd->task_id = 1;
+						$pd->doing = 1;
+						$pd->save();
+					}
 				}
-				//else{
-					// ProjectDetail::model()->updateAll(array( 'doing' => 0 ), "worker_id = $_REQUEST[worker]" );
-					// // $pd = new ProjectDetail;
-					// $record->project_id = $_REQUEST[project_id];
-					// $record->worker_id = $_REQUEST[worker];
-					// $record->task_id = 1;
-					// $record->doing = 1;
-					// if ($record->save())
-					// 	echo "hihi";
-					// else{}
-				//}
-
-				// $project = Project::model()->find("id = $_REQUEST[project_id] and status = 1 ");
-				// $project->worker =  $_REQUEST['worker'];
-				
-
-				// $project->username = $_REQUEST["manager"];
-
-				// if ($project->save())
-					// echo " aman worker".$_REQUEST['worker']."mengerjakan $_REQUEST[project_id]";
+			}
+			else{
+				// echo "ini adalah ".$worker;
+				// echo ProjectDetail::model()->count("worker_id = '$worker' ");
+				if (ProjectDetail::model()->count("worker_id = '$worker' ")!=0 ){	
+					$model  = ProjectDetail::model()->find("worker_id = '$worker' ");
+					if ($model->delete())
+						echo "deleted";
+						// eh
+				}
 				// else
-					// echo "tidak aman";
-			//}else{
-			//	echo "update All eror worker = $_REQUEST[worker] and status!=5";
-			//	print_r($model_update->getErrors());
-			//}
-				// print_r($project->getErrors());
-		}
-		else{
-			//echo "projek = 0";
-			if (ProjectDetail::model()->find("worker_id = $_REQUEST[worker]")->delete())
-				echo "deleted";
-			else
-				echo "no deleted";
-			// echo " project 0 for worker".$_REQUEST['worker'];
-			// $project = Project::model()->find("worker = $_REQUEST[worker] and status = 1 ");
-			// $project->worker = 0;
-			// if ($project->save())
-			// 	echo "aman";
-			// else
-			// 	echo "tidak aman";
-
+				// 	echo "no deleted";
+			}
+			$inc ++;
 		}
 
 	}
@@ -385,55 +430,81 @@ class ProjectController extends Controller
 		$this->renderPartial('create_comment');
 	}
 	public function actionSavecomment(){
+		$transaction = Yii::app()->db->beginTransaction();
 		$time = time();
-		if ($_FILES['file-comment']['tmp_name']){
-			// echo "sukses";
-			$hm = new ProjectCommentHead;
-			$hm->project_id = $_REQUEST['project_id'];
-			$hm->project_views_id = $_REQUEST['views_id'];
-			$hm->phase = $_REQUEST['phase_id'];
-			$hm->description = "p";
-			$hm->datetime = date('Y-m-d H:i:s');
-			$hm->user_id = User::model()->findByPk(Yii::app()->user->id)->id;
-			// $hm->type = $_REQUEST['type'];
-			$hm->type = 1;
-			if ($hm->save()){
-				foreach($_FILES['file-comment']['tmp_name'] as $key => $tmp_name ){
-					$file_name=$_FILES['file-comment']['name'][$key];
-					$file_size=$_FILES['file-comment']['size'][$key];
-					$file_tmp =$_FILES['file-comment']['tmp_name'][$key];
-					$file_type=$_FILES['file-comment']['type'][$key];
-					$model = new ProjectComment;
-					$model->head_project_id = $hm->id;
-					$model->name_file = $key.$time.$file_name;
-					$model->comment_id = 999;
-					$model->description = "nothing";
-					$model->confirmer = Yii::app()->user->id;
-					$model->confirmed_date	 = date('Y-m-d H:i:s');
-					$model->project_views_id = $_REQUEST['views_id'];
-					if ($model->save()){
-						if (move_uploaded_file($file_tmp,Yii::app()->basePath."/../img/comment/$key$time$file_name")){
-							// if ( $this->sendMailProgres($_REQUEST['views_id']) ){
-								echo "sukses";
-							// }
-							// else{
-							// 	echo "mail gagal";
-							// }
-						}else{
-							echo "eror";
-						}
+		try {
+			if ($_FILES['file-comment']['tmp_name']){
+				// echo "sukses";
+				$file_name=$_FILES['file-comment']['name'];
+				$file_size=$_FILES['file-comment']['size'];
+				$file_tmp =$_FILES['file-comment']['tmp_name'];
+				$file_type=$_FILES['file-comment']['type'];
+				if ($file_size<=200000){ //200KB
+
+				$hm = new ProjectCommentHead;
+				$hm->project_id = $_REQUEST['project_id'];
+				$hm->project_views_id = $_REQUEST['views_id'];
+				$hm->phase = $_REQUEST['phase_id'];
+				$hm->description = "p";
+				$hm->datetime = date('Y-m-d H:i:s');
+				$hm->user_id = User::model()->findByPk(Yii::app()->user->id)->id;
+				// $hm->type = $_REQUEST['type'];
+				$hm->type = 1;
+				if ($hm->save()){
+
+					// foreach($_FILES['file-comment']['tmp_name'] as $key => $tmp_name ){
+					// 	$file_name=$_FILES['file-comment']['name'][$key];
+					// 	$file_size=$_FILES['file-comment']['size'][$key];
+					// 	$file_tmp =$_FILES['file-comment']['tmp_name'][$key];
+					// 	$file_type=$_FILES['file-comment']['type'][$key];
+					// 	if ($file_size<20000){
+							$model = new ProjectComment;
+							$model->head_project_id = $hm->id;
+							$model->name_file = $key.$time.$file_name;
+							$model->comment_id = 999;
+							$model->description = "nothing";
+							$model->confirmer = Yii::app()->user->id;
+							$model->confirmed_date	 = date('Y-m-d H:i:s');
+							$model->project_views_id = $_REQUEST['views_id'];
+							if ($model->save()){
+								if (move_uploaded_file($file_tmp,Yii::app()->basePath."/../img/comment/$key$time$file_name")){
+									$transaction->commit();
+									echo "sukses";
+								}else{
+									// echo "eror upload ";
+									// echo "$file_tmp";
+									print_r($file_tmp);
+								}
+							}
+						// }
+						// else{
+						//     $transaction->rollBack();
+						// 	echo "minimum image is 200KB";
+
+						// 	// echo "sukses";
+						// }
+						// else
+							// print_r($model->getErrors());
+					}else{
+						print_r($model->getErrors());
 					}
-						// echo "sukses";
-					// else
-						// print_r($model->getErrors());
+
+					}else{
+						echo "maximum image is 200KB";
+					}
+
 				}
-			}else{
-				echo "not sukses save head";
-			}
+				// }else{
+				// 	echo "not sukses save head";
+				// }
+				
 			
-		
-		// $this->renderPartial('create_comment');
-	}
+			// $this->renderPartial('create_comment');
+			// }
+		}catch (Exception $e) {
+		    $transaction->rollBack();
+		    // other actions to perform on fail (redirect, alert, etc.)
+		} 
 	}
 	protected function sendMailProgres($vid){
 		//kirim email pada saat team memberikan progres
@@ -493,215 +564,118 @@ class ProjectController extends Controller
 	}
 	public function actionNew(){
 		//cek eror tidaknya
-		foreach  ($_FILES['fileupload']['error'] as $error ){
-			// if ($error
-			if  ($error==0)
-				$no_error = true;
-			else
-				$no_error = false;
+		// foreach  ($_FILES['fileupload']['error'] as $error ){
+		// 	// if ($error
+		// 	if  ($error==0)
+		// 		$no_error = true;
+		// 	else
+		// 		$no_error = false;
 
-		}
+		// }
 		// print_r($_FILES['fileupload']);
 		// exit;
-		$model = new Project;
-		$model->id_member = $_REQUEST['member'];
-		$model->project_name =  $_REQUEST['name'];
-		$model->start_date = $_REQUEST['start'];
-		$model->due_date = $_REQUEST['due'];
-		$model->username = 1;
-		$model->task = 1;
-		$model->progres = 0;
-		$model->priority = 1;
-		$model->worker = 0;
-		$model->status = 1;
-		if ($model->save()){
-			$calendar = new Calendar;
-			$calendar->project_id = $model->id;
-			$calendar->start_date =$_REQUEST['start'];
-			$calendar->due_date = $_REQUEST['due'];
-			$calendar->description	 = $_REQUEST['descriptionca']." of ";
-			$calendar->type	 = "due";
-			if ($calendar->save()){
-			// echo "sukses";
-				if ($no_error){
-					$time = time();
-					$hm = new ProjectCommentHead;
-					$hm->datetime = date('Y-m-d H:i:s');
-					$hm->user_id= 1;
-					$hm->project_id =$model->id ;
-					$hm->type =1 ;
-					if ($hm->save()){	
-					
-							foreach($_FILES['fileupload']['tmp_name'] as $key => $tmp_name ){
-								$comment = new ProjectComment;
-								$file_name = $_FILES['fileupload']['name'][$key];
-								$file_size =$_FILES['fileupload']['size'][$key];
-								$file_tmp =$_FILES['fileupload']['tmp_name'][$key];
-								$file_type=$_FILES['fileupload']['type'][$key];
-								// echo Yii::app()->request->baseUrl."/img/comment/".".$file_name";
-								$comment->name_file = $key.$time.$file_name;
-								$comment->head_project_id = $hm->id;
-								$comment->comment_id = 0;
-								if  ($comment->save()){			
-									if (move_uploaded_file($file_tmp,Yii::app()->basePath."/../img/comment/$key$time$file_name")){
-										// echo "sukses";
-									}
-									// else{
-									// 	// echo "sukses";
+		$transaction = Yii::app()->db->beginTransaction();
+		try {
+				$model = new Project;
+				$model->id_member = $_REQUEST['member'];
+				$model->project_name =  $_REQUEST['name'];
+				$model->start_date = $_REQUEST['start'];
+				$model->due_date = $_REQUEST['due'];
+				$model->username = 1;
+				$model->task = 1;
+				$model->progres = 0;
+				$model->priority = 1;
+				$model->worker = 0;
+				$model->status = 1;
+				if ($model->save()){
+					$calendar = new Calendar;
+					$calendar->project_id = $model->id;
+					$calendar->start_date =$_REQUEST['start'];
+					$calendar->due_date = $_REQUEST['due'];
+					$calendar->description	 = $_REQUEST['descriptionca']." of ";
+					$calendar->type	 = "due";
+					if ($calendar->save()){
+					// echo "sukses";
+						if ($no_error){
+							$time = time();
+							$hm = new ProjectCommentHead;
+							$hm->datetime = date('Y-m-d H:i:s');
+							$hm->user_id= 1;
+							$hm->project_id =$model->id ;
+							$hm->type =1 ;
+							if ($hm->save()){	
+							
+								 $transaction->commit();
+							// foreach($_FILES['fileupload']['tmp_name'] as $key => $tmp_name ){
+									// 	$comment = new ProjectComment;
+									// 	$file_name = $_FILES['fileupload']['name'][$key];
+									// 	$file_size =$_FILES['fileupload']['size'][$key];
+									// 	$file_tmp =$_FILES['fileupload']['tmp_name'][$key];
+									// 	$file_type=$_FILES['fileupload']['type'][$key];
+									// 	// echo Yii::app()->request->baseUrl."/img/comment/".".$file_name";
+									// 	$comment->name_file = $key.$time.$file_name;
+									// 	$comment->head_project_id = $hm->id;
+									// 	$comment->comment_id = 0;
+									// 	if  ($comment->save()){			
+									// 		if (move_uploaded_file($file_tmp,Yii::app()->basePath."/../img/comment/$key$time$file_name")){
+									// 			// echo "sukses";
+									// 		}
+									// 		// else{
+									// 		// 	// echo "sukses";
+									// 		// }
+									// 	}			
+									// 	// echo $file_name. " ";
 									// }
-								}			
-								// echo $file_name. " ";
-							}
-						}
+								}
 
 
-				
-
-				}
-				//kirim email start
-				Yii::import('ext.yii-mail.YiiMailMessage');
-				$message = new YiiMailMessage;
-				$message->view = "project_notif";
-				$params  = array('email'=>$email,'name'=>$name,'code'=>$code);
-				$message->setBody($params, 'text/html');
-				$message->subject = "New Project on vvfy";
-				$message->addTo("try35u@gmail.com");
-				$message->addTo("ARIEF.FAUZIAKBAR@gmail.com");
-				$message->addTo("jad@vvfy.me");
-				$message->addTo("majd@vvfy.me");
-				$message->from = Yii::app()->params['adminEmail'];
-				//  emails to keep in cc
-               // $emails = array("try35u@gmail.com","try.setyoutomo@yahoo.com");
-               // // foreach($emails as $value){
-               //    $message->addCC(trim($value));  
-               // }
-  
-				// $message->from = "Support";
-				// if (Yii::app()->mail->send($message))
-					echo "sukses";
-				// else
-					// echo "gagal";
-
-				//kirim emai end
-			}
-			// echo "sukses";
-		}else{
-			echo json_encode($model->getErrors());
-		}
-		// echo
-		// echo count($_FILES['uploads']['fileupload']);
-		// if(count($_FILES['uploads']['fileupload'])) {
-			// foreach ($_FILES['uploads']['fileupload'] as $file) {
-
-			// //do your upload stuff here
-				// echo $file;
-
-			// }
-		// }else{
-			// echo "asdsa";
-		// }
-		// if ($_FILES['fileupload']){
-			// // echo "masuk";
-			// print_r($_FILES['fileupload']);
-			// // $no=1;
-			// // foreach ($_FILES['fileupload'] as $name) { 
-			// // $no++;
-			// // echo "<pre>";
-			// // print_r($name);
-			// // echo "</pre>";
-				// // // echo $name['name']." ";
-			// // }
-				// error_reporting(E_ALL);
-
-				// /*** the upload directory ***/
-				// $upload_dir= './uploads';
-
-				// /*** numver of files to upload ***/
-				// $num_uploads = 5;
-
-				// /*** maximum filesize allowed in bytes ***/
-				// $max_file_size  = 51200;
-
-				// /*** the maximum filesize from php.ini ***/
-				// $ini_max = str_replace('M', '', ini_get('upload_max_filesize'));
-				// $upload_max = $ini_max * 1024;
-
-				// /*** a message for users ***/
-				// $msg = 'Please select files for uploading';
-
-				// /*** an array to hold messages ***/
-				// $messages = array();
-				// /** loop through the array of files ***/
-				// echo count($_FILES['fileupload']['tmp_name']);
-				// for($i=0; $i < count($_FILES['fileupload']['tmp_name']);$i++)
-				// {
-					// // echo $i;
-					// // check if there is a file in the array
-					// if(!is_uploaded_file($_FILES['fileupload']['tmp_name'][$i]))
-					// {
-						// echo 'No file uploaded';
-						// $messages[] = 'No file uploaded';
-					// }
-					// /*** check if the file is less then the max php.ini size ***/
-					// elseif($_FILES['fileupload']['size'][$i] > $upload_max)
-					// {
-						// echo 'about size';
-						// $messages[] = "File size exceeds $upload_max php.ini limit";
-					// }
-					// // check the file is less than the maximum file size
-					// elseif($_FILES['fileupload']['size'][$i] > $max_file_size)
-					// {
-						// $messages[] = "File size exceeds $max_file_size limit";
-						// echo 'File size exceeds $max_file_size limit';
-
-					// }
-					// else
-					// {
-						// // copy the file to the specified dir 
-						// if(@copy($_FILES['fileupload']['tmp_name'][$i],$upload_dir.'/'.$_FILES['fileupload']['name'][$i]))
-						// {
-							// /*** give praise and thanks to the php gods ***/
-							// $messages[] = $_FILES['fileupload']['name'][$i].' uploaded';
-							// echo "uploadded";
-						// }
-						// else
-						// {
-							// /*** an error message ***/
-							// $messages[] = 'Uploading '.$_FILES['fileupload']['name'][$i].' Failed';
-							// echo "fail";
-						// }
-					// }
-				// }
 						
-		// }else{
-			// echo "not isset";
-		// }
-			// // echo "masuk";
-		// // }else{
-		// echo "no";
-		// }
-		// $model = new Project;
-		// $model->id_member = $_REQUEST['member'];
-		// $model->project_name =  $_REQUEST['name'];
-		// $model->start_date = $_REQUEST['start'];
-		// $model->due_date = $_REQUEST['due'];
-		// $model->username = 1;
-		// $model->task = 1;
-		// $model->progres = 0;
-		// $model->priority = 1;
-		// $model->status = 1;
-		// if ($model->save()){
-			// echo "sukses";
-		// }else{
-			// print_r($model->getErrors());
-		// }
+
+						}
+						//kirim email start
+						Yii::import('ext.yii-mail.YiiMailMessage');
+						$message = new YiiMailMessage;
+						$message->view = "project_notif";
+						$params  = array('email'=>$email,'name'=>$name,'code'=>$code);
+						$message->setBody($params, 'text/html');
+						$message->subject = "New Project on vvfy";
+						$message->addTo("try35u@gmail.com");
+						$message->addTo("ARIEF.FAUZIAKBAR@gmail.com");
+						$message->addTo("jad@vvfy.me");
+						$message->addTo("majd@vvfy.me");
+						$message->from = Yii::app()->params['adminEmail'];
+						//  emails to keep in cc
+		               // $emails = array("try35u@gmail.com","try.setyoutomo@yahoo.com");
+		               // // foreach($emails as $value){
+		               //    $message->addCC(trim($value));  
+		               // }
+		  
+						// $message->from = "Support";
+						// if (Yii::app()->mail->send($message))
+							echo "sukses";
+						// else
+							// echo "gagal";
+
+						//kirim emai end
+					}
+					// echo "sukses";
+				}else{
+					echo json_encode($model->getErrors());
+				}
+		
+		}catch (Exception $e) {
+		    $transaction->rollBack();
+		    // other actions to perform on fail (redirect, alert, etc.)
+		} 
 	
 	}
 	public function actionDelete(){
-		if (Project::model()->findByPk($_GET['id'])->delete()){
+		if (Project::model()->findByPk($_REQUEST['id'])->delete()){
 			$calendar = Calendar::model()->deleteAll("project_id = $_GET[id]");
 			if ($calendar){
 				echo "sukses";
+			}else{
+				echo "delete failed, ID not found";
 			}
 		}
 	

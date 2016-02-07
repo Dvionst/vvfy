@@ -33,8 +33,13 @@
 	var myUrlTabName = myUrlTab.substring(0,4); // For the above example, myUrlTabName = #tab
 
 	// (function(){
+    // $(document).ready(function(){
+// });
     $(document).ready(function(){
       $('select').select2();
+      $('.swipebox').swipebox();
+
+    
       var tipe_tab = 0;
       // $('#form-waiting').trigger("submit");
       // $('#container-waiting').imagesLoaded()
@@ -139,16 +144,19 @@
     //   // alert(count);
     // }
     var  output = 0;
+    var $container;
+    var container_inside;
+    var $url;
+    // var  
 
+    $(document).on('click', '#refresh-filter', function(e) {
+      $('#form-filter').trigger('submit');
+    });
     $(document).on('submit', '#form-filter', function(e) {
       e.preventDefault();
+      var data = $(this).serialize();
 
       
-      var data = $(this).serialize();
-      var $container;
-      var container_inside;
-      var $url;
-      // var  
       if (tipe_tab==0){ //jika waiting
         $container = $('#tab1');
         container_inside = "#container-waiting";
@@ -176,7 +184,7 @@
       $.ajax({
         url : $url,
         data : data,
-        // cache : false,
+        cache : true,
         beforeSend:function(data){
           $('.loader-list-image').fadeIn();
           $('#full-screen').fadeIn();
@@ -184,14 +192,24 @@
           // $container_inside.fadeOut();
         },
         success:function(data){
-          $('#full-screen').fadeOut();
           // alert(data);
           $('.caption-prj').fadeOut();
            // $('#container-waiting').fadeIn();
            // $('#container-waiting').html(data);
-           $container.html(data);
            output = data;
+           $container.html(data);
            // alert(data);
+           $container.html(data).imagesLoaded().done(function(){
+                $(container_inside).isotope({
+                   itemSelector : '.from-team',
+                   masonry: {
+                       columnWidth: 1,
+                       layoutMode: 'masonry'
+                   }
+                 });
+            }).fail(function(){
+                // do stuff if any one of the images fails to load
+            });
 
         }
       }).done(function(){
@@ -200,16 +218,17 @@
           // alert(json.selector);
           // if (tipe_tab==0){
             // alert(container_inside);
-            $(container_inside).imagesLoaded( function(){
-              $(container_inside).isotope({
-                   itemSelector : '.from-team',
-                   masonry: {
-                       columnWidth: 1,
-                       layoutMode: 'masonry'
-                   }
-                 });
+            // $(container_inside).imagesLoaded( function(){
+            //   $(container_inside).isotope({
+            //        itemSelector : '.from-team',
+            //        masonry: {
+            //            columnWidth: 1,
+            //            layoutMode: 'masonry'
+            //        }
+            //      });
+               $('#full-screen').fadeOut();
                $('.loader-list-image').fadeOut();
-             });
+             // });
           // }else if (tipe_tab==2){
           //   // alert('go');
           //    $("#container-reject").imagesLoaded( function(){
@@ -230,6 +249,7 @@
       });
   
     });
+   $('#form-filter').trigger("submit");
     $(document).on('change', '.filter-project-waiting', function(e) {
         $('#form-filter').submit();
     });
@@ -365,40 +385,22 @@
         window.location.href = '<?php echo Yii::app()->request->baseUrl ?>/img/comment/'+file ;  
     });
     $(document).on('click', '.action-reject', function(e) {
-      // var id = $(this).attr('id_pdm');
-      // var confirm = window.confirm("are you sure reject ?");
-      // if (confirm==true){
-      //    window.location.assign('<?php echo Yii::app()->createUrl("Project/setreject") ?>&id='+id);
-   
-      // } 
       var id = $(this).attr('id_pdm');
       var from_team_index = $(this).closest('.from-team').index();
-      // alert(id);
       var confirm = window.confirm("are you sure approve ?");
       if (confirm==true){            
-             $.ajax({
-              url: "<?php echo Yii::app()->createUrl("Project/setreject")?>",
-              cache: false,
-              data : "id="+id,
-              beforeSend:function(){
-                // $('.loading').show();
-              },
-              success: function(msg){
-                // alert(msg);
-                $('.from-team').eq(from_team_index).hide();
-                $container.isotope({
-                  filter:"*",
-                });
-              }
+         $.ajax({
+          url: "<?php echo Yii::app()->createUrl("Project/setreject")?>",
+          data : "id="+id,
+          beforeSend:function(){},
+          success: function(msg){
+            $('.from-team').eq(from_team_index).hide();
+            $container.isotope({
+              filter:"*",
             });
-
-
-            // window.location.assign('<?php echo Yii::app()->createUrl("Project/setsent") ?>&id='+id);
-        // alert('ok');
-      }
-
-
-  
+          }
+        });
+    }
     });
 
 	    $("#content > div").hide(); // Initially hide all content
@@ -648,6 +650,9 @@ $allow = array('png','jpg','gif','PNG','JPG','GIF');
     <label>
       Date
       <input name="date" value="<?php echo date('Y-m-d') ?>" type="date" class="filter-project-waiting" style="border-radius:0;" >
+    </label>
+    <label>
+      <input name="date"  type="button" value="REFRESH" class="filter-project-waiting" id="refresh-filter"  >
     </label>
 </form>
   <center>

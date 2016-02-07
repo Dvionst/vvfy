@@ -14,8 +14,8 @@ $form=$this->beginWidget('CActiveForm', array(
 
 	<?php echo $form->textField($user,'username',array("placeholder"=>"Email Address")); ?>
 	<div id="signup-error" class="signup-email"></div>
-	<?php echo $form->textField($member,'name',array("placeholder"=>"username")); ?>
-	<div id="signup-error" class="signup-username"></div>
+	<?php //echo $form->textField($member,'name',array("placeholder"=>"username")); ?>
+	<!-- <div id="signup-error" class="signup-username"></div> -->
 	<?php echo $form->passwordField($user,'password',array("placeholder"=>"Password")); ?>
 	<div id="signup-error" class="signup-password"></div>
 	<?php echo $form->passwordField($user,'repeat_password',array("placeholder"=>"Confirm Password")); ?>
@@ -41,6 +41,7 @@ $form=$this->beginWidget('CActiveForm', array(
 	                                             $("#sign-up").attr("disabled",true);
 	                                             $("#sign-up").val("");
 	                                             $("#signup-loading").show();
+	                                             $("#overlay").fadeIn();
 	            							}',
 	            							'error'=> 'function(data){
 	            								alert(data.responseText);
@@ -49,15 +50,16 @@ $form=$this->beginWidget('CActiveForm', array(
 	                                             $("#sign-up").attr("disabled",false);
 	                                             	$("#sign-up").val("SUBMIT");
 	                                             $("#signup-loading").hide();
+	                                             $("#overlay").fadeOut();
 	                                        }',
 	                   						'success'=>'function(data){  
-												$("#User_username").css({"border":"1px solid #191919"});	
-												$("#Member_name").css({"border":"1px solid #191919"});	
-												$("#User_password").css({"border":"1px solid #191919"});		
-												$("#User_repeat_password").css({"border":"1px solid #191919"});	
+												$("#User_username").css({"border":"1px solid #2D2D2D"});	
+												//$("#Member_name").css({"border":"1px solid #2D2D2D"});	
+												$("#User_password").css({"border":"1px solid #2D2D2D"});		
+												$("#User_repeat_password").css({"border":"1px solid #2D2D2D"});	
 
 												$(".signup-email").html("");
-												$(".signup-username").html("");
+												//$(".signup-username").html("");
 												$(".signup-password").html("");
 												$(".signup-repeat_password").html("");
 
@@ -65,13 +67,20 @@ $form=$this->beginWidget('CActiveForm', array(
 	                                             // View login errors!
 	                                            // alert(JSON.stringify(data));
 	                                            if(obj.reg == "success"){
-	                                            	$("#reg-conf-email").html(obj.email);
+	                                            	$(".control_toggle").hide();
+	                                            	$("#reg-conf-title").html("Verify Your Email");
+	                                            	$("#reg-conf-detail").html("We sent a verification email to <span id=\'reg-conf-email\'>"+obj.email+"</span>. Click the link in  the email to get started!");
 	                                         		$("#left-menu-full-black").fadeIn();
 		 											$("#wrap-reg-conf").fadeIn();
+												    $("#User_username").val("");
+												    $("#Member_name").val("");
+												    $("#User_password").val("");
+												    $("#User_repeat_password").val("");
+													$(".right-menu[value~=\'sign\']").trigger("click");			 										
 	                                         		//parent.location.href = obj.redirect;
 	                                      		}else{
 	                                                $(".signup-email").show();
-	                                                $(".signup-username").show();
+	                                                //$(".signup-username").show();
 	                                                $(".signup-password").show();
 	                                                $(".signup-repeat_password").show();
 		                                             
@@ -80,10 +89,10 @@ $form=$this->beginWidget('CActiveForm', array(
 	                                                	$("#User_username").css({"border":"1px solid red"});	
 	                                                }
 
-	                                                $(".signup-username").html(obj.username);
-	                                                if(obj.username){
-	                                                	$("#Member_name").css({"border":"1px solid red"});	
-	                                                }	                    
+	                                                //$(".signup-username").html(obj.username);
+	                                                //if(obj.username){
+	                                                //	$("#Member_name").css({"border":"1px solid red"});	
+	                                                //}	                    
 
 	                                                $(".signup-password").html(obj.password);
 	                                                if(obj.password){

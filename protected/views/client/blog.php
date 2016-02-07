@@ -1,4 +1,8 @@
-
+<style type="text/css">
+	.post-blog{
+		height: auto;
+	}
+</style>
 
 <?php 
 $data = Yii::app()->db->createCommand()
@@ -38,13 +42,13 @@ $data = Yii::app()->db->createCommand()
 			<?php 
 			$filename =Yii::app()->basePath."/../img/blog/$d[image]";
 			// echo $filename;
-			if (file_exists($filename)) {?>
-			<img  class="img-first"  src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/<?php echo $d['image'] ?>">
+			//if (file_exists($filename)) {?>
+			<!-- <img  class="img-first"  src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/<?php echo $d['image'] ?>"> -->
 			<?
-			} else {?>
+			//} else {?>
 			<img class="img-first" src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/notfound.jpg">
 			<?php	
-			}	
+			//}	
 			?>
 			<!-- <img class="img-first" src="<?php echo Yii::app()->request->baseUrl; ?>/img/blog/<?php echo $d['image'] ?>">
 			-->
@@ -121,4 +125,6 @@ $data = Yii::app()->db->createCommand()
 	<div style="clear:both"></div>
 
 	</div>
+<i  style=" color:white;"></i>
+
 </div>

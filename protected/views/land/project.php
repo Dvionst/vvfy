@@ -1,14 +1,14 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.2.0/imagesloaded.pkgd.min.js"></script>
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/land.css">
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js"></script>
-
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-ui.js"></script>
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/normalize.css" rel="stylesheet" type="text/css" media="all" />
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/pro-bars.min.css" rel="stylesheet" type="text/css" media="all" />
+<!-- <link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/pro-bars.min.css" rel="stylesheet" type="text/css" media="all" /> -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/style.min.css" rel="stylesheet" type="text/css" media="all" />
 
+<!--
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/smoothscroll.min.js" type="text/javascript"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/appear.min.js" type="text/javascript"></script>
-<!--
 	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/backbone.js" type="text/javascript"></script>
 -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/pro-bars.min.js" type="text/javascript"></script>
@@ -16,12 +16,11 @@
 <link  href='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/fullcalendar.css' rel='stylesheet' />
 <link  href='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/fullcalendar.print.css' rel='stylesheet' media='print' />
 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.2.0/imagesloaded.pkgd.min.js"></script>
 
 <script src='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/lib/moment.min.js'></script>
-<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/fullcalendar.min.js'></script>
 <script src='<?php echo Yii::app()->request->baseUrl; ?>/js/msdropdown/jquery.dd.min.js'></script>
-<!--
+<!--s
+<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/originalfc/fullcalendar.min.js'></script>
 <script src='<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.timer.js'></script>
 -->
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/msdropdown/dd.css" />
@@ -83,7 +82,8 @@
 <div id="status"></div>
 <div id="form-add"></div>
 <div id="wrapper">
-	<?php include('content.php') ?>	
+	<?php $this->renderPartial('content');?>
+	<?php //include('content.php') ?>	
 </div>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.swipebox.js"></script>	
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/swipebox.css">

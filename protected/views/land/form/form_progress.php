@@ -42,8 +42,8 @@
 				'enableAjaxValidation'=>false,
 				'action'=>Yii::app()->createAbsoluteUrl("Project/savecomment"),
 				'htmlOptions'=>array(
-				'class'=>"default clearfix",	
-				'enctype'=>'multipart/form-data',
+					'class'=>"default clearfix",	
+					'enctype'=>'multipart/form-data',
 				)
 			)); ?>
 			<script>

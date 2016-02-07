@@ -15,13 +15,11 @@
 			<p class="name">Jad</p>
 			<p class="jab">founder</p>
 		</div>
-		<!--
-		<div class="content">
-			<img class="member" data-src="img/majd.png"  />
+<!-- 		<div class="content">
+			<img class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/majd.png"  />
 			<p class="name">Majd</p>
 			<p class="jab">operation manager</p>
-		</div>
-		-->
+		</div> -->
 		<div class="content" style="">
 			<img class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/arif-new.png"  />
 			<p class="name">Arief</p>
@@ -32,11 +30,11 @@
 			<p class="name">Riki</p>
 			<p class="jab">3d artist</p>
 		</div>
-		<div class="content">
+<!-- 		<div class="content">
 			<img style="visibility:hidden;" class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/founder-new.jpg"  />
 			<p class="name">&nbsp;</p>
 			<p class="jab">&nbsp;</p>
-		</div>
+		</div> -->
 		<div class="content">
 			<img class="member" data-src="<?php echo Yii::app()->request->baseUrl; ?>/img/yuda-new.jpg"  />
 			<p class="name">Yuda</p>

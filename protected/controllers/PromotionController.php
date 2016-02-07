@@ -6,7 +6,7 @@ class PromotionController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
+	public $layout='landing';
 
 	/**
 	 * @return array action filters
@@ -36,7 +36,7 @@ class PromotionController extends Controller
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -70,7 +70,7 @@ class PromotionController extends Controller
 		{
 			$model->attributes=$_POST['Promotion'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('create',array(
@@ -138,14 +138,37 @@ class PromotionController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Promotion('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Promotion']))
-			$model->attributes=$_GET['Promotion'];
+		$this->layout = "landing";
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+		$filtersForm=new FiltersForm;
+			if (isset($_GET['FiltersForm']))
+				$filtersForm->filters=$_GET['FiltersForm'];	
+			// $user  = Yii::app()->user->name;
+			// $id = Nasabah::model()->find("username='$user'")->id_nasabah; 
+			// $status = Pengguna::model()->find('user=:un',array(':un'=>"$user"))->status;
+		
+			$dataProvider = Yii::app()->db->createCommand()
+			->select('*')
+			->from('promotion')
+			->queryAll();
+			// $string_model =  json_encode($dataProvider);
+			$filteredData=$filtersForm->filter($dataProvider);
+			$model=new CArrayDataProvider($filteredData,array(
+			 'sort'=>array(
+		        'attributes'=>array(
+		             'id', 'name', 'valid_date','status'
+		        ),
+		  	  ),
+		    'pagination'=>array(
+		        'pageSize'=>10,
+		    ),
+			)
+
+			);
+			$this->render('admin',array(
+				'model'=>$model,
+				'filtersForm' => $filtersForm,
+			));
 	}
 
 	/**

@@ -82,7 +82,6 @@ class UserController extends Controller
 			$member->attributes=$_POST['Member'];
 			$member->type_account=$_POST['Member']['type_account'];
 
-
 			$user->scenario = 'register';
 			$member->scenario = 'register';
 
@@ -91,6 +90,8 @@ class UserController extends Controller
 			$valid=$user->validate();
        		$valid=$member->validate() && $valid;
 			if($valid){
+				$email=explode("@", $user->username);
+				$member->name=$email[0];
 				$member->email=$user->username;
 				$member->date_register=new CDbExpression('NOW()');
 				$member->code=strtoupper(substr(md5(uniqid(rand(), true)),0,5));

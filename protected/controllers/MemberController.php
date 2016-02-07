@@ -216,6 +216,7 @@ class MemberController extends Controller
 			echo "eror";
 
 	}
+	
 	public static function SendMail($email,$name,$code,$token)
     {   
 		Yii::import('ext.yii-mail.YiiMailMessage');

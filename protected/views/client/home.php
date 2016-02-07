@@ -30,21 +30,36 @@ $total_views = count(Yii::app()->db->createCommand($sql)->queryAll());
 	    top: 60px;
 	    background-color: white;
 	}
+	.detail-project ul{		
+	    width: 300px;
+	    margin: 0 auto;
+	    margin-left: 130px;
+	}
 
 </style>
 <div class="section" id="home">
 	<div class="center-user">
 		<div class="summary">
 			<div class="invested">
-				<img class="img-invested" src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/user/icon-invested.PNG">
-				
+				<?php if (Yii::app()->user->MemberTipe()==0):?>	
+					<img class="img-invested" src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/user/badge-silver.PNG">
+				<?php else: ?>
+					<img class="img-invested" src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/user/badge-gold.PNG">		
+				<?php endif; ?>		
 				<div class="wrapper-total-invested">
-					<p class="number-invested">
-						11,000 $			
-					</p>
+					<?php if (Yii::app()->user->MemberTipe()==0):?>	
+					<p class="number-invested">11,000 $			</p>
 					<div class="lbl-invested">TOTAL INVESTED</div>
+					<?php else: ?>
+					<p style="font-size: 25px;letter-spacing: 0px;" class="number-invested">PREMIUM ACCOUNT</p>
+					<?php endif; ?>
+
 					<div class="line-lbl-invested"></div>
-					<p class="lbl-invested-detail" >you've earned bronze badges</p>
+					<?php if (Yii::app()->user->MemberTipe()==1): ?>	
+						<p class="lbl-invested-detail" >you've earned gold badges</p>
+					<?php else: ?>
+						<p class="lbl-invested-detail" style="color:rgba(203,203,203,1)" >you've earned silver badges</p>
+					<?php endif; ?>
 				</div>
 				<div style="clear:both"></div>
 			</div>
@@ -79,7 +94,7 @@ $total_views = count(Yii::app()->db->createCommand($sql)->queryAll());
 							</label>
 						</div>
 					</li>
-					<li>
+					<li style="display:none">
 						<div class="wrapper-total-label">
 						<?php 
 							$total_days = Yii::app()->db->createCommand("SELECT MIN(start_date) st, MAX(due_date) due,
@@ -101,10 +116,11 @@ $total_views = count(Yii::app()->db->createCommand($sql)->queryAll());
 						</div>
 					</li>
 				<ul>
+				<div style="clear:both"></div>
 
 			</div>
 		</div>		
-		<div  class="upgrade">
+		<div  class="upgrade" style="display:none">
 			<div class="separator-vertikal"></div>
 			<div class="wrapper-label-upgrade">
 			<?php 
@@ -150,7 +166,7 @@ $total_views = count(Yii::app()->db->createCommand($sql)->queryAll());
 		</div>
 		<div class="choice-project">
 			<?php
-			$sql_promot = "select * from promotion limit 2 ";
+			$sql_promot = "select * from promotion where date(valid_date)>=date(now()) limit 2 ";
 			$model_promot =  Yii::app()->db->createCommand($sql_promot)->queryAll(); 
 			 ?>
 			<?php foreach ($model_promot as $mp ): ?>

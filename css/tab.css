@@ -38,7 +38,7 @@
 		text-transform:uppercase;
 		line-height: 20px;
 		font-size:12px;
-		font-family: Raleway-Thin !important;
+		font-family: font-thin !important;
 		/*border-left: 1px solid #1B1B1B;*/
 	}
 	.list-menu .none{
@@ -236,13 +236,6 @@ a#fs_play-pause {
 #menu-right li:hover {
 	color:#F5B800;
 }
-@font-face {
-	font-family: ebrima;
-	src: url('font/ebrima.ttf');
-}
-*,h1,h2,h3,p{
-	font-family:ebrima;
-}
 
 
 	.wrapper-down{
@@ -402,7 +395,7 @@ a#fs_play-pause {
 		position: absolute;
 		font-size: 13px;
 		z-index: 90;
-		font-family: Raleway-Thin !important;
+		font-family: font-thin !important;
 		text-align: right;
 		top: 0;
 		left: 0;

@@ -35,7 +35,9 @@ class Team extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('skype,facebook,twitter,linkedin', 'required','on'=>"perbaharui"),
 			array('name', 'length', 'max'=>50),
+			 array('image', 'file', 'types'=>'jpg, gif, png', 'safe' => false),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name', 'safe', 'on'=>'search'),
@@ -64,6 +66,7 @@ class Team extends CActiveRecord
 			'facebook' => 'Facebook',
 			'skype' => 'Skype',
 			'linkedin' => 'Linked In',
+			'image' => 'Pic',
 		);
 	}
 

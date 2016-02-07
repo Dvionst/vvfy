@@ -31,12 +31,23 @@
 		</div>
 		<div id="blog-search">
 			<form method="GET" action="<?php echo Yii::app()->createAbsoluteUrl('blog/index'); ?>">
-			<div class="wrapper-search">	
-				
-					<input class="input-search" name="search" type="text" placeholder="SEARCH BLOG...">
-					<input type="submit" style="display:none">
-					<div class="submit" style="background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/search-black.PNG');"></div>
-				
+			<div class="wrapper-search">
+				<input class="input-search" name="search" type="text" placeholder="SEARCH BLOG...">
+				<input type="submit" style="display:none">
+				<?php
+					if(preg_match('/(?i)msie [5-8]/',$_SERVER['HTTP_USER_AGENT']))
+					{
+				?>
+					<img class="submit" src="<?php echo Yii::app()->createAbsoluteUrl('/img/baru/blog/search-black.PNG'); ?>"><span></span></img>
+				<?php
+					}
+					else
+					{
+				?>
+					<div class="submit" style="background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/search-black.PNG');"></div>	
+				<?php
+					}
+				?>				
 			</div>
 			</form>
 		</div>
@@ -101,7 +112,7 @@
 						<?php } ?>
 
 					</div>
-					<?php //if  (!Yii::app()->user->isGuest) :?>
+					<?php if(!Yii::app()->user->isGuest){ ?>
 					<?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm',array(
 						// 'id'=>'kasir-form',
 						'enableAjaxValidation'=>false,
@@ -165,7 +176,7 @@
 						</table>
 						
 					<?php $this->endWidget(); 
-						//endif;
+						}
 					?>
 				</div>
 			</div>
@@ -189,9 +200,24 @@
 				<div class="box" style="padding-top:0px;border-bottom:1px solid gray;display:inline-block">
 					<ul class="share-view">
 						<center>
-							<li id="share-fb"><img src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/fb.PNG"></li>
-							<li id="share-tw"><img src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/tw.PNG"></li>
-							<li id="share-ln"><img src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/in.PNG"></li>
+							<li id="share-fb">
+								<a target="_blank" title="Facebook" class="share-view"
+									href="http://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(Yii::app()->createAbsoluteUrl('blog/view',array('id'=>$_REQUEST['id']))); ?>">
+									<img src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/fb.PNG">
+								</a>
+							</li>
+							<li id="share-tw">
+								<a target="_blank" title="Twitter" class="share-view"
+									href="http://twitter.com/share?url=<?php echo urlencode(Yii::app()->createAbsoluteUrl('blog/view',array('id'=>$_REQUEST['id']))); ?>">
+									<img src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/tw.PNG"></li>
+								</a>
+							</li>
+							<li id="share-ln">
+								<a target="_blank" title="Linkedin" class="share-view"
+									href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode(Yii::app()->createAbsoluteUrl('blog/view',array('id'=>$_REQUEST['id']))); ?>">
+									<img src="<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/li.PNG">
+								</a>
+							</li>
 						</center>
 					</ul>
 				</div>
@@ -261,7 +287,7 @@
 			<?php 
 			$filename =Yii::app()->basePath."/../img/blog/$d[image]";
 			// echo $filename;
-			if (file_exists($filename)) {?>
+			if ((file_exists($filename))&&(!$d['image']=="")) {?>
 			<img  class="img-related"  src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/<?php echo $d['image'] ?>">
 			<?
 			} else {?>
@@ -336,44 +362,13 @@
 
 
 <script>
+$(".share-view").click(function(event) {
+	event.preventDefault();
+	window.open($(this).attr("href"), "Sharing", "directories=0,height=600,width=800,location=0,menubar=0,status=0,titlebar=0,toolbar=0");
+});
+
+
 (function($) {
-	var didScroll;
-	var lastScrollTop = 0;
-	var delta = 5;
-	var navbarHeight = $('header').outerHeight();
-
-	setInterval(function() {
-	    if (didScroll) {
-	        hasScrolled();
-	        didScroll = false;
-	    }
-	}, 250);
-
-
-	function hasScrolled() {
-	    var st = $(this).scrollTop();
-	    
-	    // Make sure they scroll more than delta
-	    if(Math.abs(lastScrollTop - st) <= delta)
-	        return;
-	    
-	    // If they scrolled down and are past the navbar, add class .nav-up.
-	    // This is necessary so you never see what is "behind" the navbar.
-	    if (st > lastScrollTop && st > navbarHeight){
-	        // Scroll Down
-	        $('header').removeClass('nav-down').addClass('nav-up');
-	    } else {
-	        // Scroll Up
-	        if(st + $(window).height() < $(document).height()) {
-	            $('header').removeClass('nav-up').addClass('nav-down');
-	        }
-    	}
-    
-    	lastScrollTop = st;
-
-	}
-
-
     var elementright = $('#content-right'),
         originalYright = elementright.offset().top,
         originalBotRight = elementright.offset().top+$('#content-right').height();
@@ -389,7 +384,7 @@
     elementleft.css('position', 'relative');
     
     $(window).on('scroll', function(event) {
-    	didScroll = true;
+
         var scrollTop = $(window).scrollTop();
         
         var limit = $('#wrapper-related').offset().top;
@@ -413,3 +408,14 @@
 })(jQuery);
 
 </script>
+
+
+
+<!--[if lt IE 9]>
+	<script>
+		$('input, textarea').placeholder();
+	</script>	
+	<style>
+		.placeholder { color: black; }
+	</style>
+<![endif]-->	

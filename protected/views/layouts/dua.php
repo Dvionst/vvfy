@@ -21,10 +21,10 @@
       <li><img class="imgvvfy" src="<?php echo Yii::app()->request->baseUrl; ?>/images/3.jpg" alt=""></li>
     </ul>
 	<div class="controls_wrapper">
-		<a href="javascript:void(0)" title="" class="fs_slider_prev rslides1_nav prev"></a>
+		<a href="javascript:void(0)" title="" class="fs_slider_prev rslides1_nav prev" style="background-image:url('<?php echo Yii::app()->request->baseUrl; ?>/img/prev.png')"></a>
 		<a href="javascript:void(0)" title="" id="fs_play-pause" class="fs_pause"></a>
 		<a href="javascript:void(0)" title="" id="fs_play-pause" class="fs_play" style="display:none"></a>
-		<a href="javascript:void(0)" title="" class="fs_slider_next rslides1_nav next"></a>
+		<a href="javascript:void(0)" title="" class="fs_slider_next rslides1_nav next" style="background-image:url('<?php echo Yii::app()->request->baseUrl; ?>/img/next.png')"></a>
 	</div>
 	<div class="wrapper-down" id="premium"  >
 		<h1 class=""  >PREMIUM PACKAGE</h1>
@@ -46,7 +46,7 @@
 	</div>
 	<div id="second">
 
-		<div title="close the video" id="pause"></div>
+		<div title="close the video" id="pause" style= "background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/img/close-video.png');"></div>
 		<div title="share this video" style= "background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/img/share.png');"  class="share" id="share_open"></div>
 		<div id="open_share">
 				<?php
@@ -62,20 +62,43 @@
 		<!--
 		-->
 		<div class="wrap-v">
-<!-- 			<video id="video-vv" class="video-bg" autoplay="" loop="" muted=""  poster=""  style="">
-					<source src="<?php echo Yii::app()->request->baseUrl; ?>/vv.mp4" type="video/mp4" id="sourcevid">
-			</video>
-			<div class="back"></div> -->
 
 			<video id="full" poster="asd"  class="video-bg" controls  loop=""  style="display: none"></video>
 			<video id="video-vv" class="video-bg" autoplay="" loop="" muted=""  poster=""  style="">
 				<source src="<?php echo Yii::app()->request->baseUrl; ?>/vv.mp4" type="video/mp4" id="sourcevid">
+				<object id="video-vv" class="video-bg" type="application/x-shockwave-flash" data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" muted="true" loop="true">
+					<param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />
+					<param name="allowFullScreen" value="true" />
+					<param name="wmode" value="transparent" 	/>
+					<param name="flashVars" value="config={'muted':true,'playlist':[{'url':'<?php echo Yii::app()->createAbsoluteUrl('vv.mp4'); ?>','autoPlay':true}]}" />
+					<span title="No video playback capabilities, please download the video below">VVFY</span>
+				</object>
+
 			</video>
+	
 			<div class="back"></div>
 			<div class="block" id="play">
-				<span style="" class="play-button">
-					<span></span>
-				</span>
+				<?php
+					if(preg_match('/(?i)msie [5-8]/',$_SERVER['HTTP_USER_AGENT']))
+					{
+				?>
+					<img class="play-premium" src="<?php echo Yii::app()->createAbsoluteUrl('/img/baru/play.png'); ?>"><span></span></img>
+				<?php
+					}
+					else
+					{
+				?>
+					<div class="play-premium" style="background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/img/baru/play.png');"><span></span></div>	
+				<?php
+					}
+				?>
+				<!--[if gt IE 8]>
+					
+				<![endif]-->			
+				
+				<!--[if lt IE 9]>
+						
+				<![endif]-->
 			</div>
 			<!-- Button -->
 			<span class="hint" title="">
@@ -91,18 +114,7 @@
 		</div>
 		<!--
 		-->		
-	
-<!-- 		<div class="block" id="play">
-			<span style="" class="play-button">
-				<span style="margin-top:40px;margin-left:8px;" title="" ></span>
-			</span>
-		</div>
-		<div   class="block" id="block"></div>
-		<span class="hint" title="">
-			<div>
-			</div>
-			OUR TEAM, KNOWLEDGEE AND ASSETS </br> ARE AT THE DISPOSAL OF OUR PREMIUM MEMBERS . 
-		</span> -->
+
 		<script>
 		function openInstant(){
 		// alert($(window).width()>400);
@@ -325,6 +337,7 @@
 		</div> -->
 		<div class="block" id="pause" style="display:none;" title="close the video">
 			<span class="play-button" >
+
 			</span>
 		</div>		
 	</div>
@@ -334,6 +347,8 @@ $(function() {
 		$('.hint').css('visibility','hidden');
 		$('.back').fadeOut();
 		$('.share').fadeIn();
+		$('#pause').css("z-index",91);
+		$('#pause').fadeIn();
 		$('#play').fadeOut();	
 		$('.btn-nav').css("opacity",0);
 		$('#video-vv').html("");
@@ -344,11 +359,9 @@ $(function() {
 		$('#full').append('<source src="<?php echo Yii::app()->baseUrl; ?>/bau.mp4" type="video/mp4">');
 		$('#full').prop("muted", false);
 		$('#full').prop("currentTime", 0);
-		if ($(window).width()>=760){
-			$('.video-bg').trigger('play');
-		}
-		$('#pause').css("z-index",91);
-		$('#pause').fadeIn();
+		$('.video-bg').trigger('play');
+		
+		
 	});
 
 	$("#pause").click(function(){
@@ -365,7 +378,7 @@ $(function() {
 		 $('#video-vv').html("<source src='/vvfy/vv.mp4' type='video/mp4' id='sourcevid'>");
 		 $('#video-vv').fadeIn();
 		 $('#video-vv').prop("muted", true);
-		 $('.play-button').css("opacity","1");
+		 $('.play-premium').css("opacity","1");
 		$('.prominent-wrapper').fadeIn();
 		$('#play').fadeIn();
 		$('.btn-nav').css('opacity',1);

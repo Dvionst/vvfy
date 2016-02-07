@@ -114,7 +114,7 @@
 		<div class="title">notification</div>
 		<div class="wrapper-box-notif">
 		<?php
-		$sql = "select * from notification_team where username = '$id'  ";
+		$sql = "select * from notification_team where username = '$id' order by tanggal desc ";
 		$model = Yii::app()->db->createCommand($sql)->queryAll();?>
 
 		 <?php
@@ -149,6 +149,14 @@
 			$model = Team::model()->find("username = '$id' ");
 			// echo  $id;
 			// echo count($model);
+			if (isset($_REQUEST['Team'])){
+				$model->scenario = "perbaharui";
+				$model->attributes = $_REQUEST['Team'];
+				if ($model->save()){
+					echo " ";
+					// $this->redirect(array('land/account'));
+				}
+			}
 		 ?>
 			<div class="wide form">
 			<?php $form=$this->beginWidget('CActiveForm', array(
@@ -175,6 +183,11 @@
 					<?php echo $form->labelEx($model,'linkedin'); ?>
 					<?php echo $form->textField($model,'linkedin',array('size'=>50,'maxlength'=>50)); ?>
 					<?php echo $form->error($model,'linkedin'); ?>
+				</div>
+				<div class="row">
+					<?php echo $form->labelEx($model,'twitter'); ?>
+					<?php echo $form->textField($model,'twitter',array('size'=>50,'maxlength'=>50)); ?>
+					<?php echo $form->error($model,'twitter'); ?>
 				</div>
 
 				

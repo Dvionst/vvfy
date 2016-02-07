@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		
@@ -6,10 +7,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<meta name="description" content="Vfy.me is an Art And Tech  Studio dedicated to incorporate The Latest  Visual Inventions in form of services for Architects And Designers, Our Team is a Mix Of Architects, Designer, 3D Artists and Developers, Our Business is founded in  Beirut - Lebanon And operates from Bandung - Indonesia ">
 
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+
 		<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js"></script>
 		
 		<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/slides/jquery.slides.min.js"></script>
-		<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/blog.css" type="text/css" />
 		
 		<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/carousel/modernizr.js"></script>
 		<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/carousel/jcarousel.transitions.js"></script>
@@ -44,6 +47,9 @@
 		<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/blog-mobile.css" type="text/css" media="only screen and (max-width: 768px) and (min-width: 10px)" />
 		<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/blog-tab.css" type="text/css" media="only screen and (max-width: 960px) and (min-width: 768px)" />
 		<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/blog-computer.css" type="text/css" media="only screen and (min-width: 960px) and (max-width: 10000px)" />
+		<!--[if lt IE 9]>
+		  <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/blog-computer.css"/>
+		<![endif]-->
 		<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/left-menu.css" type="text/css" />
 	</head>
 	<style>
@@ -59,8 +65,7 @@
 	?>
 	<a title="menu" style="background-image : url('<?php echo Yii::app()->baseUrl?>/img/diamond_sprite.png')" href="javascript:void(0)"  class="control_toggle"> 
 	</a>
-	<header>
-
+	<div id="header">
 		<div id="header-center">
 		
 			<div id="menu">
@@ -78,36 +83,69 @@
 			<img  src="<?php echo Yii::app()->request->baseUrl; ?>/img/gambar.png">
 		</a>
 
-	</header>
-
+	</div>
+	<?php
+		include('overlay.php');
+	?>
 	<div id="wrapper">
 		<?php  echo $content;?>
 	</div>
 
 
 	<script>
-// if (window.addEventListener) window.addEventListener('DOMMouseScroll', wheel, false);
-// window.onmousewheel = document.onmousewheel = wheel;
+		$(document).ready(function(){	
+			$('html,body').css({'overflow':'hidden'});
+			$('#wrapper').imagesLoaded( function(){
+				// alert('sukses');
+				$('#overlay').fadeOut();
+				$('html,body').css({'overflow':'visible'});
+			});
 
-// function wheel(event) {
-//     var delta = 0;
-//     if (event.wheelDelta) delta = event.wheelDelta / 120;
-    // else if (event.detail) delta = -event.detail / 3;
+			var didScroll;
+			var lastScrollTop = 0;
+			var delta = 5;
+			var navbarLimit = 400;
 
-//     handle(delta);
-//     if (event.preventDefault) event.preventDefault();
-//     event.returnValue = false;
-// }
+			function hasScrolled() {
+			    var st = $(this).scrollTop();
 
-// function handle(delta) {
-//     var time = 1000;
-// 	var distance = 300;
-    
-//     $('html, body').stop().animate({
-//         scrollTop: $(window).scrollTop() - (distance * delta)
-//     }, time );
-// }
+			    // Make sure they scroll more than delta
+			    if(Math.abs(lastScrollTop - st) <= delta)
+			        return;
+			    
+			    // If they scrolled down and are past the navbar, add class .nav-up.
+			    // This is necessary so you never see what is "behind" the navbar.
+			    if (st > lastScrollTop && st > navbarLimit){
+			        // Scroll Down
+			        $('#header').removeClass('nav-down').addClass('nav-up');
+			    } else {
+			        // Scroll Up
+			        if(st<navbarLimit) { //st + $(window).height() < $(document).height()
+			            $('#header').removeClass('nav-up').addClass('nav-down');
+			        }
+		    	}
+		    	lastScrollTop = st;
+			}
+
+			$(window).scroll(function(event){
+				didScroll = true;
+			});
+
+			setInterval(function() {
+			    if (didScroll) {
+			        hasScrolled();
+			        didScroll = false;
+			    }
+			}, 250);	
+
+		});
 
 	</script>
 	</body>
+	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/slipry/dist/slippry.min.js"></script>
+	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/isotope.pkgd.min.js"></script>
+	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/packery-mode.pkgd.min.js"></script>
+	<script src="<?php echo Yii::app()->request->baseurl; ?>/js/imagesloaded.pkgd.min.js"></script>
 	<html>	
+
+

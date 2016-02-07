@@ -4,21 +4,51 @@
 	  overflow-x: hidden !important;
 	}
 
-
 	@font-face {
-		font-family: Raleway-Light;
-		src: url('font/Raleway-Light.ttf');
-	}
-
-
-	@font-face {	
-		font-family: Raleway-Thin;
-		src: url('font/Raleway-Thin.ttf');
+		font-family: 'font-light';
+		src: url('fonts/Raleway-Light.eot');
+		src: local('☺'), url('fonts/Raleway-Light.woff') format('woff'), url('fonts/Raleway-Light.ttf') format('truetype'), url('fonts/Raleway-Light.svg') format('svg');
+		font-weight: normal;
+		font-style: normal;
 	}
 
 	@font-face {
-		font-family: Raleway-Bold;
-		src: url('font/Raleway-Bold.ttf');
+		font-family: 'font-thin';
+		src: url('fonts/Raleway-Thin.eot');
+		src: local('☺'), url('fonts/Raleway-Thin.woff') format('woff'), url('fonts/Raleway-Thin.ttf') format('truetype'), url('fonts/Raleway-Thin.svg') format('svg');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+
+	@font-face {
+		font-family: 'font-bold';
+		src: url('fonts/Raleway-Bold.eot');
+		src: local('☺'), url('fonts/Raleway-Bold.woff') format('woff'), url('fonts/Raleway-Bold.ttf') format('truetype'), url('fonts/Raleway-Bold.svg') format('svg');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'font-regular';
+		src: url('fonts/Raleway-Regular.eot');
+		src: local('☺'), url('fonts/Raleway-Regular.woff') format('woff'), url('fonts/Raleway-Regular.ttf') format('truetype'), url('fonts/Raleway-Regular.svg') format('svg');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'ebrima';
+		src: url('fonts/ebrima.eot');
+		src: local('☺'), url('fonts/ebrima.woff') format('woff'), url('fonts/ebrima.ttf') format('truetype'), url('fonts/ebrima.svg') format('svg');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+
+
+	*,h1,h2,h3,p{
+		font-family:font-regular;
 	}
 
 	* {

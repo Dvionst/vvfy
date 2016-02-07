@@ -1,5 +1,5 @@
 
-
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-ui.js"></script>
 <script type="text/javascript">
 	var db = openDatabase('backend_vvfy', '1.0', 'Test DB', 2 * 1024 * 1024);
 	function database(){

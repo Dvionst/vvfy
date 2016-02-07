@@ -1,3 +1,14 @@
+<style type="text/css">
+	/*.wrapper-project-timeline .hold{
+		width: 120px;
+		height: 50px;
+		background-color: transparent;
+		position: absolute;
+		z-index: 200;
+		left: 240px;
+		cursor: pointer;
+	}*/
+</style>
 <?php 
 $id = Yii::app()->user->id;
 if (Yii::app()->user->level()=='3'){		
@@ -47,74 +58,46 @@ if ($phid!='all'){
 
 // ";
 
-$sql = "SELECT pv.id idviews ,ph.datetime, ph.project_id, 
-pdm.name_file,pdm.id AS id_comment,
-SUBSTRING_INDEX(pdm.name_file,'.',-1) AS ext
-FROM
-project AS p 
-INNER JOIN 
-project_views AS pv
-ON p.id = pv.project_id
-INNER JOIN
-project_comment_head AS ph 
-ON pv.id = ph.project_views_id
-INNER JOIN
-
-(
-SELECT 
-MAX(id) id ,
-MAX(head_project_id) head_project_id,
-MAX(name_file) name_file,
-MAX(comment_id) comment_id,
-STATUS,
-MAX(alias_name) alias_name,
-MAX(confirmer) confirmer,
-MAX(confirmed_date) confirmed_date,
-MAX(description) description,
-MAX(project_views_id) project_views_id
-
-FROM project_comment pc
-where status = 1
-GROUP BY 
-pc.project_views_id
-)
- AS pdm
-ON pdm.head_project_id = ph.id
-WHERE 
-p.id_member = '$id_member'
-AND
-pdm.status = 1 
-AND
-SUBSTRING_INDEX(pdm.name_file,'.',-1) IN ('jpg','png','gif','PNG','JPG','GIF')
-$project
-$phase
- 
-GROUP BY pdm.project_views_id
-ORDER BY ph.datetime DESC
-
-
+$sql = "
+select 
+*,p.id project_id
+from 
+project p inner join status s
+on 
+p.status = s.id
+where 
+id_member = '$id_member'
+and status = 1
 ";
 // echo  $sql;
 $views_timeline = Yii::app()->db->createCommand($sql)->queryAll();
 ?>
-<div class="project-timeline">
-	<ul>
-		<?php foreach($views_timeline as $d): ?>
-			<li>
-				<div id_comment="<?php echo $d['id_comment'] ?>" class="project-circle" idviews="<?php echo $d['idviews'] ?>">
-					<div class="date-project-circle">
-						<?php 
-						echo date('d M Y H:i',strtotime($d[datetime]) );
-						?>
-					</div>
-					<div class="project-circle-line">
-						<div class="circle-inside"></div>
-					</div>
 
-				</div>
-			</li>
-		<?php endforeach; ?>
-	</ul>
+<div class="wrapper-project-timeline">
+	<div class="fa fa-chevron-up fa-2x top-hold hold" style="color:white"></div>
+		<div class="project-timeline">
+			<ul>
+				<?php foreach($views_timeline as $d): ?>
+					<li>
+						<div id_project="<?php echo $d['project_id'] ?>" id_comment="<?php echo $d['id_comment'] ?>" class="project-circle" idviews="<?php echo $d['idviews'] ?>">
+							<div class="circle-status">
+								<?php echo $d[name] ;?>
+							</div>
+							<div class="date-project-circle">
+								<?php echo date('d M Y',strtotime($d[due_date]) );?>
+							</div>
+							<div class="project-circle-line">
+								<div class="circle-inside"></div>
+							</div>
+							<div class="circle-name-project">
+								<?php echo $d[project_name] ?>
+							</div>
+						</div>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	<div class="fa fa-chevron-down fa-2x bottom-hold hold" style="color:white"></div>
 </div>
 
 

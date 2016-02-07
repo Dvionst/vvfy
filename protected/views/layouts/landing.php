@@ -1,22 +1,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<!--
-	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js"></script>
--->
+	<!--
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	-->
+	
+	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js"></script>
+
+	<!--jquery ui 
 	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-ui.js"></script>
+	-->
+
+
 	<link rel="SHORTCUT ICON" href="<?php echo Yii::app()->request->baseUrl;?>/img/gambar.png"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="language" content="en" />
 	<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/land.css">
-	<link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/normalize.css" rel="stylesheet" type="text/css" media="all" />
+	<!-- <link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/normalize.css" rel="stylesheet" type="text/css" media="all" /> -->
 	<link href="<?php echo Yii::app()->request->baseUrl; ?>/css/progress/pro-bars.min.css" rel="stylesheet" type="text/css" media="all" />
 <!--
 	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/smoothscroll.min.js" type="text/javascript"></script>
 	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/appear.min.js" type="text/javascript"></script>
+	<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script>
 -->
+
+	
+
 
 	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/pro-bars.min.js" type="text/javascript"></script>
 	<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/msdropdown/jquery.dd.min.js'></script>
@@ -30,6 +40,12 @@
 	<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/tag-editor/jquery.caret.min.js'></script>
 	<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/tag-editor/jquery.tag-editor.min.js'></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/js/tag-editor/jquery.tag-editor.css" />
+
+
+	<!--submenu menu maker -->
+	<script src='<?php echo Yii::app()->request->baseUrl; ?>/js/submenu/script.js'></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/js/submenu/styles.css" />
+
 
 	<!-- plugin chart  
 	 <script src='<?php echo Yii::app()->request->baseUrl; ?>/js/chart/Chart.js'></script>
@@ -52,9 +68,35 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/msdropdown/skin2.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/msdropdown/sprite.css" />
 	
-	
+	<!-- font awesome -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
 	<title><?php echo "VVFY land " ?></title>
 	<style>
+	.grid-view table.items th {
+ 	   color: white;
+	    /* background: url("bg.gif") repeat-x scroll left top white; */
+	    text-align: center;
+	    background: rgba(237,28,36,1);
+	}
+	.grid-view table.items tr.odd {
+    	background: rgba(245,184,10,0.2);
+	}
+	.fa{
+		color:red!important;
+	}
+	.img-progres{
+		width: 100%;
+	}
+	.wrapper-img-progres .date{
+		position: absolute;
+	    top: 135px;
+	    right: 50px;
+	}
+	.wrapper-img-progres{
+		height: 200px;
+		overflow: hidden;
+	}
 	input[type="button"],input[type="submit"],button{
 		background-color: rgba(237,28,36,1);
 		border: none;
@@ -380,6 +422,18 @@
 		height:100vw!important;
 		display: none;
 	}
+	#swipebox-arrows{
+		display: none!important;
+	}
+	.logout-user{
+		position:absolute;
+		top: 20px;
+		right: 0px;
+	}
+	.logout-user a{
+		display:inline;
+		text-decoration: none;
+	}
 
 	</style>
 	
@@ -427,9 +481,7 @@
 
 // }
 
-$(document).ready(function(){
-	$('.swipebox').swipebox();
-});
+
 	<?php 
 	// $action = $this->action->Id;
 	// $idp =  Page::model()->find("name = '$action'")->id;
@@ -497,7 +549,7 @@ $(document).ready(function(){
 	// }
 	// echo "menu :".$permission;
 	?>
-<?php include('dist/jquery.php') ?>
+<?php $this->renderPartial('application.views.land.dist.js') ?>
 <div id="full-screen"></div>
 <?php 		
 
@@ -507,57 +559,47 @@ $(document).ready(function(){
 		<header style="margin-bottom:20px">
 			<div class="title"><div style="display:inline;font-weight:bolder;color:#464646">VVFY</div>.land</div>
 			<div class="categori-tab">
+				<!--
 				<ul class="main-tab" style="margin-top: 25px;">
 					<li ><a <?php if ($this->menu=='dashboard') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/dashboard"); ?>">HOME</a></li>
-					<?php //if ($permission==true) {?>
-						<?php
-						// $id_permission = MasterPermission::model()->find("actionID = 'project' and controllerID='$controller' ")->id;
-						// $jml = count(Permission::model()->find("username = '$id' and permission_id = '$id_permission'  "));	
-						// if ($jml>=1) {
-						?>
-						<li ><a <?php if ($this->menu=='project') echo "style=color:yellow"; else "style=color:#958989";  ?>  href="<?php echo Yii::app()->createAbsoluteUrl("land/project"); ?>">PROJECTS</a></li>
-						<?php //}
-						// $id_permission = MasterPermission::model()->find("actionID = 'index' and controllerID='$controller' ")->id;
-						// $jml = count(Permission::model()->find("username = '$id' and permission_id = '$id_permission'  "));	
-						// if ($jml>=1) {?>
-						<li ><a <?php if ($this->menu=='index') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/index"); ?>">BUSSINES DEV</a></li>
-						<?php 
-						// }
-						
-						//  $id_permission = MasterPermission::model()->find("actionID = 'financial' and controllerID='$controller' ")->id;
-						// $jml = count(Permission::model()->find("username = '$id' and permission_id = '$id_permission'  "));	
-						// if ($jml>=1) {?>
-						<li ><a <?php if ($this->menu=='financial') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/financial"); ?>">FINANCIAL</a></li>
-						
-						<?php //} ?>
-						
-						<?php
-						// $id_permission = MasterPermission::model()->find("actionID = 'financial' and controllerID='$controller' ")->id;
-						// $jml = count(Permission::model()->find("username = '$id' and permission_id = '$id_permission'  "));	
-						// if ($jml>=1) {?>
-						<li ><a <?php if ($this->menu=='blog') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/blog"); ?>">BLOG</a></li>
-						<li ><a <?php if ($this->menu=='account') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/account"); ?>">MY ACCOUNT</a></li>
-						<li ><a <?php if ($this->menu=='uploaded') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/uploaded"); ?>">NEWS FEED </a></li>
-						
-
-						<?php// } ?>
-						
-						
-						<style>
-						#swipebox-arrows{
-							display: none!important;
-						}
-						.logout-user{
-							position:absolute;
-							top: 20px;
-							right: 0px;
-						}
-						.logout-user a{
-							display:inline;
-							text-decoration: none;
-						}
-					</style>
+					<li ><a <?php if ($this->menu=='project') echo "style=color:yellow"; else "style=color:#958989";  ?>  href="<?php echo Yii::app()->createAbsoluteUrl("land/project"); ?>">PROJECTS</a></li>
+					<li ><a <?php if ($this->menu=='index') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/index"); ?>">BUSSINES DEV</a></li>
+					<li ><a <?php if ($this->menu=='financial') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/financial"); ?>">FINANCIAL</a></li>
+					<li ><a <?php if ($this->menu=='blog') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/blog"); ?>">BLOG</a></li>
+					<li ><a <?php if ($this->menu=='account') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/account"); ?>">MY ACCOUNT</a></li>
+					<li ><a <?php if ($this->menu=='uploaded') echo "style=color:yellow"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/uploaded"); ?>">NEWS FEED </a></li>
 				</ul>
+				-->
+				<div id='cssmenu'>
+					<ul>
+					   <li ><a style="padding:0px" href="<?php echo Yii::app()->createAbsoluteUrl("land/dashboard"); ?>"><i class="fa fa-home fa-3x"></i></a></li>
+					   <li class='active'><a href='#'>Data</a>
+					      <ul>
+					         <li><a <?php if ($this->menu=='client') echo "style=color:red"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("client/admin"); ?>">Client</a>
+					           <!--  <ul>
+					               <li><a href='#'>Sub Product</a></li>
+					               <li><a href='#'>Sub Product</a></li>
+					            </ul> -->
+					         </li>
+					         <li><a href='<?php echo Yii::app()->createAbsoluteUrl("blog/admin"); ?>'>Blog</a>
+					           <!--  <ul>
+					               <li><a href='#'>Sub Product</a></li>
+					               <li><a href='#'>Sub Product</a></li>
+					            </ul> -->
+					         </li>
+					         <li ><a href="<?php echo Yii::app()->createAbsoluteUrl("team/admin"); ?>">Team</a></li>
+					         <li ><a href="<?php echo Yii::app()->createAbsoluteUrl("rules/admin"); ?>">Rules</a></li>
+					         <li ><a href="<?php echo Yii::app()->createAbsoluteUrl("promotion/admin"); ?>">Promotion</a></li>
+					      </ul>
+					   </li>
+					   <li><a <?php if ($this->menu=='project') echo "style=color:red"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/project"); ?>">Project</a></li>
+					   <li><a <?php if ($this->menu=='index') echo "style=color:red"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/index"); ?>">Bussines Dev</a></li>
+					   <li><a <?php if ($this->menu=='financial') echo "style=color:red"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/financial"); ?>">Financial </a></li>
+					   <li><a <?php if ($this->menu=='account') echo "style=color:red"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/account"); ?>">My Account</a></li>
+					   <li><a <?php if ($this->menu=='uploaded') echo "style=color:red"; else "style=color:#958989";  ?> href="<?php echo Yii::app()->createAbsoluteUrl("land/uploaded"); ?>">News Feed</a></li>
+					</ul>
+				</div>
+
 			</div>
 			<div class="logout-user">
 				<a style="color:black;font-size:20px" href="#">Hi  <?php echo Yii::app()->user->name; ?></a>

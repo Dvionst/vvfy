@@ -87,7 +87,18 @@
 			<tr>
 				<td>image</td>
 				<td><input id="blog-image" type="file" name="image"   ><br>
-					<img style="width:400px;height:auto" src="<?php echo Yii::app()->baseUrl; ?>/img/blog/<?php echo $model->image ?>">
+					<?php 
+					
+					$filename =Yii::app()->basePath."/../img/blog/$model->image";
+					// echo $filename;
+					if (file_exists($filename)) { 
+						$src = Yii::app()->request->baseurl."/img/blog/$model->image ";
+					} else {
+						$src = Yii::app()->request->baseurl."/img/blog/notfound.jpg";
+					}	
+					
+					?>
+					<img style="width:400px;height:auto" src="<?php echo $src ?>"> 
 				</td>
 			</tr>
 			<tr>

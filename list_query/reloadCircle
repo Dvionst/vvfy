@@ -1,0 +1,52 @@
+SELECT pv.id idviews ,ph.datetime, ph.project_id,
+
+
+s.name status_p,
+
+pdm.name_file,pdm.id AS id_comment,project_name,
+SUBSTRING_INDEX(pdm.name_file,'.',-1) AS ext
+FROM
+project AS p 
+INNER JOIN 
+STATUS AS s
+ON p.status = s.id
+INNER JOIN
+project_views AS pv
+ON p.id = pv.project_id
+INNER JOIN
+project_comment_head AS ph 
+ON pv.id = ph.project_views_id
+INNER JOIN
+
+(
+SELECT 
+MAX(id) id ,
+MAX(head_project_id) head_project_id,
+MAX(name_file) name_file,
+MAX(comment_id) comment_id,
+STATUS,
+MAX(alias_name) alias_name,
+MAX(confirmer) confirmer,
+MAX(confirmed_date) confirmed_date,
+MAX(description) description,
+MAX(project_views_id) project_views_id
+
+FROM project_comment pc
+where status = 1
+GROUP BY 
+pc.project_views_id
+)
+ AS pdm
+ON pdm.head_project_id = ph.id
+WHERE 
+p.id_member = '$id_member'
+AND
+pdm.status = 1 
+AND
+SUBSTRING_INDEX(pdm.name_file,'.',-1) IN ('jpg','png','gif','PNG','JPG','GIF')
+$project
+$phase
+ 
+GROUP BY p.id
+ORDER BY ph.datetime DESC
+

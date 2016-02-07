@@ -1,34 +1,34 @@
 <div id="body-content">
 		<div id="second">
 			<div id="wrapper-circle" style="height:150px">
-					<?php 
-					$data = Yii::app()->db->createCommand()
-					->select("*,categories_main.color,head_categories.name as namahe")
-					->from('head_categories,categories_main')
-					->where('head_categories.id_mc = categories_main.id')
-					->queryAll();
-					?>
-					<div id="mn-project" style="margin-left:0px" id=""  class="category-value"  >
-						<div style="border:9px solid #FCDE18" class="circle-parent">
-							<div style="border:5px solid black"  class="circle-child cir growth">
-								<p>PROJECT</p>
-							</div>
+				<?php 
+				$data = Yii::app()->db->createCommand()
+				->select("*,categories_main.color,head_categories.name as namahe")
+				->from('head_categories,categories_main')
+				->where('head_categories.id_mc = categories_main.id')
+				->queryAll();
+				?>
+				<div id="mn-project" style="margin-left:0px" id=""  class="category-value"  >
+					<div style="border:9px solid #FCDE18" class="circle-parent">
+						<div style="border:5px solid black"  class="circle-child cir growth">
+							<p>PROJECT</p>
 						</div>
 					</div>
-					<div  id="mn-user" style="margin-left:120px" id=""  class="category-value"  >
-						<div class="circle-parent">
-							<div style="border:5px solid black"  class="circle-child cir growth">
-								<p>USER</p>
-							</div>
+				</div>
+				<div  id="mn-user" style="margin-left:120px" id=""  class="category-value"  >
+					<div class="circle-parent">
+						<div style="border:5px solid black"  class="circle-child cir growth">
+							<p>USER</p>
 						</div>
 					</div>
-					<div  id="mn-archive" style="margin-left:240px" id=""  class="category-value"  >
-						<div class="circle-parent">
-							<div style="border:5px solid black"  class="circle-child cir growth">
-								<p>ARCHIVES</p>
-							</div>
+				</div>
+				<div  id="mn-archive" style="margin-left:240px" id=""  class="category-value"  >
+					<div class="circle-parent">
+						<div style="border:5px solid black"  class="circle-child cir growth">
+							<p>ARCHIVES</p>
 						</div>
 					</div>
+				</div>
 			</div>
 		</div>
 		<div id="third">
@@ -45,7 +45,7 @@
 					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#303a51',GradientType=0 ); /* IE6-9 */
 				}
 				</style>
-				<?php include("page-project.php") ?>
+				<?php $this->renderPartial('page/page-project');?>
 				<div id="tbl-client">
 					<div class="filter" style="visibility:hidden">
 						<ul class="filter-data">
@@ -88,7 +88,7 @@
 					
 				</div>
 				<div id="tbl-user">
-					<?php include("page-user.php") ?>
+					<?php $this->renderPartial('page/page-user');?>
 				</div>
 				<div id="tbl-team"></div>
 				<div id="tbl-archive">

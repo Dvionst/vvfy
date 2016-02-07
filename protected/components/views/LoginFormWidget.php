@@ -16,7 +16,7 @@ $form=$this->beginWidget('CActiveForm', array(
 	<?php echo $form->passwordField($model,'password',array("placeholder"=>"Password")); ?>
 	<!--<button class="sign-in-submit">SUBMIT</button>-->
 	<div id="login-error"></div>
-	 <?php echo CHtml::ajaxSubmitButton('SUBMIT',
+	 <?php echo CHtml::ajaxSubmitButton('SIGN IN',
 	 	//'http://www.vvfy.land/index.php?r=site/login',
 	    array('/site/loginajax'),
 	                                array(  
@@ -24,12 +24,13 @@ $form=$this->beginWidget('CActiveForm', array(
 	                                             $("#login").attr("disabled",true);
 	                                             $("#login").val("");
 	                                             $("#login-loading").show();
+	                                             $("#overlay").fadeIn();
 	            							}',
 	            							'error'=> 'function(data){
 	            							}',
 	                                        'complete' => 'function(){ 
 	                                             $("#login").attr("disabled",false);
-	                                             $("#login").val("SUBMIT");
+	                                             $("#login").val("SIGN IN");
 	                                             $("#login-loading").hide();
 	                                        }',
 	                   						'success'=>'function(data){  
@@ -43,6 +44,7 @@ $form=$this->beginWidget('CActiveForm', array(
 	                                                $("#login-error").html("Invalid username or password!");
 	                                                $("#LoginForm_username").val("");
 	                                                $("#LoginForm_password").val("");
+	                                                $("#overlay").fadeOut();
 	                                           }
 	                                        }' 
 	    ),

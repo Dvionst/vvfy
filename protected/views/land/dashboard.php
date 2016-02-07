@@ -1,5 +1,34 @@
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->baseUrl; ?>/js/select2/dist/css/select2.min.css">
+<script type="text/javascript" src="<?php echo Yii::app()->baseUrl; ?>/js/select2/dist/js/select2.min.js"></script>
+
+<script type="text/javascript" src="<?php echo Yii::app()->baseUrl; ?>/js/toast/src/main/javascript/jquery.toastmessage.js"></script>
+<link rel="Stylesheet" type="text/css" href="<?php echo Yii::app()->baseUrl; ?>/js/toast/src/main/resources/css/jquery.toastmessage.css" />
+<!-- <select multiple=""> -->
+<?php
+// for($a=1;$a<=10;$a++):
+	?>
+	<!-- <option value="<?php echo $a ?>">haha</option> -->
+<?php
+// endfor;
+ ?>
+	<!-- <option value="2">hihi</option> -->
+<!-- </select> -->
 
 <style>
+#wrapper-redbox{
+    overflow-y: auto;
+    width: 95%;
+    height: 150px;
+}
+.dash-non-editabble-project,dash-non-editabble-date{
+	display:block;
+}
+.dash-editabble-project,.dash-editabble-date{
+	display:none;
+}
+#edit-team:hover{
+	color:black;
+}
 .option{background:red;}
 #sp{ /* status page*/
 background:rgba(237,28,36,1);
@@ -7,7 +36,7 @@ margin-left:30px;
 position:relative;
 width:60%;
 float:left;
-height:210px;
+height:310px;
 color:white;
 font-weight:bold;
 text-align:center;
@@ -189,13 +218,34 @@ display:inline;
 margin-top:-20px;
 }
 .size-15{
-font-size:15px;
-text-transform:uppercase;
-border-bottom: :1px solid white;
+	font-size:15px;
+	text-transform:uppercase;
+	border-bottom: :1px solid white;
 }
 .size-15 td{
-margin-top:20px;
-padding-top:20px;
+	margin-top:20px;
+	padding-top:20px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+     background-color: white!important; 
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    color: black;
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 0 5px;
+}
+.select2-container--default .select2-selection--multiple {
+    background-color: transparent;
+    border: 0px solid #aaa;
+    border-radius: 4px;
+    cursor: text;
+    /*border: */
+}
+.select2-container{
+	width: 60%!important;
 }
 </style>
 

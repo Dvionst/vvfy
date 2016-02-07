@@ -1,10 +1,35 @@
+<?php 
+	$baseurl = Yii::app()->request->baseUrl;
+	$id = Yii::app()->user->id;
+	if (Yii::app()->user->level()=='3'){		
+		$id_member = Member::model()->find("TRIM(email) = '$id'")->id;
+	}else{
+		$id_member = MemberSub::model()->find("TRIM(email) = '$id'")->id_member;
 
+	}
+
+?>
+<!-- images Loaded -->
 <script src="<?php echo Yii::app()->request->baseurl; ?>/js/imagesloaded.pkgd.min.js"></script>
-<script src="//js.pusher.com/2.2/pusher.min.js"></script>
-		<!-- Smooth Touch Scroll -->
+
+
+<!-- Toast -->
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/toast/src/main/javascript/jquery.toastmessage.js"></script>
+<link rel="Stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/js/toast/src/main/resources/css/jquery.toastmessage.css" />
+
 <style type="text/css">
 	
-	
+	.duedatefull{
+		width: 20px;
+		height: 20px;
+		position: relative!important;
+		top: -20px;
+		z-index: -11;
+		left: 10px;
+		border-radius:50%;
+		-webkit-border-radius:50%;
+		-moz-border-radius:50%;
+	}
 /*	*{
 	::-webkit-scrollbar {
 	width: 7px;
@@ -21,17 +46,18 @@
 		user-select: none;
 	}*/
 	#menu{
-    position: relative;
-    right: 0px;
+    position: fixed;
     display: block;
     top: 20px;
-    float: right;	
+    right: 20px;
+    left: auto;
+    /*float: right;	*/
 	}
 	#menu li a{
 	letter-spacing: 0px;
 	text-decoration:none;
 	color:white;
-	font-size:21px;
+	font-size:18px;
 	font-family: "ebrima"!important;
 	}
 	#menu ul li{
@@ -39,19 +65,20 @@
 	color:white;
 	margin-left:20px;
 	}
-	.logo-def,.logo_retina{
+	.logo-def{
 		display: block;
 	}
 
-	header .logo{
-	/*width: 100px;*/
+	/*header .logo{
 	right: 100px;
 	top: 0px;
 	display: none;
-	position: absolute;
-	}
+	}*/
 	header .logo img{
-		width: 150px;
+		display: none;
+	}
+	.show_logo{
+		display: block!important;
 	}
 	.hide-menu{
 		/*display: none!important;*/
@@ -103,10 +130,6 @@
 		/*border:1px solid white;*/
 		/*width: 300px;*/
 	}
-	div.zabuto_calendar .table tr th, div.zabuto_calendar .table tr td {
-     background-color: transparent!important; 
-     color: white;
-	}	
 	.summary{
 		color: white;
 		/*width:40%;*/
@@ -244,6 +267,7 @@
 	    float: left;
 	    color: white;
 	    padding: 15px;
+	    margin-left: 80px;
 	}
 	.choice-promo-project{
 		border: 1px solid white;
@@ -404,10 +428,46 @@
 	.reject{
 		display: none!important;
 	}
-	#zabuto_calendar{
 
+
+	/* mengatur css kembali css full kalendar*/
+	.fc-unthemed .fc-today{
+		background-color: transparent;
+	}
+	.fc-event {
+    position: relative;
+    display: block;
+    font-size: .85em;
+    line-height: 1.3;
+    border-radius: 3px;
+    color: red;
+     border: 1px solid transparent; 
+     background-color: transparent; 
+    font-weight: normal;
+}
+	#my-calendar .fc-center,#my-calendar .fc-head{
+		color: white;
+	}
+	#my-calendar table body tr td{
+		border: 0px solid transparent;
+	}
+	#my-calendar{
 		font-family: 'Open Sans', sans-serif;
 	}
+	.fc th, .fc td{
+		color: white;
+		border-width:0px;
+	}
+	.fc-day-grid-container{
+		height: auto!important;
+	}
+	#my-calendar .fc-ltr .fc-basic-view .fc-day-number{
+		text-align: center;
+	}
+	.fc-ltr .fc-basic-view .fc-day-number{
+		text-align: center;
+	}
+
 	.project-description{
 		float: left;
 		position: relative;
@@ -435,6 +495,17 @@
 		transition: background-size 1s,width 1s, height 1s,margin-left 1s;
 		/*border-radius:50%;*/
 		z-index: 30;
+	}
+	.circle-status{
+		color: white;
+	    text-transform: uppercase;
+	    -webkit-transition: opacity 1s; /* Safari */
+	    -moz-transition: opacity 1s; /* Safari */
+	    position: relative;
+	    left: -100px;
+	    top: 6px;
+	    width: 10px;
+	    opacity: 0;
 	}
 	.menu-circle:hover{
 		background-color: red;
@@ -479,6 +550,9 @@
 		opacity: 1;
 		top: 30px;
 	}
+	.project-circle:hover > .circle-status{
+		opacity: 1;
+	}
 	.project-circle:hover > .date-project-circle {
 		opacity: 1;
 	}
@@ -490,7 +564,7 @@
 	}
 	.project-timeline ul {
 		border-left: 2px solid rgba(203,172,118,1);
-	    margin-left: 85px;
+	    margin-left: 130px;
 	}
 	.project-label{
 		font-weight: bold;
@@ -635,10 +709,6 @@
 	    z-index: 100;
 	    transition: opacity 250ms, left 300ms, bottom 300ms;
 	}
-	div.zabuto_calendar .table tr td.event div.day, div.zabuto_calendar ul.legend li.event {
-     background-color: transparent!important; 
-    color: red;
-	}
 	.legend{
 		display: none;
 	}
@@ -654,9 +724,12 @@
 		float: left;
 		width: 400px;
 		height: 460px;	
+		overflow-y:auto; 
+		border:0px solid white;
 		margin-left: 50px;
-		background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/images/2.jpg');
+		/*background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/images/2.jpg');*/
 		background-size: cover;		
+		position: relative;
 	    background-position: center center;
 	   
 	}
@@ -761,7 +834,7 @@
     letter-spacing: 4px;
 }
 .go-blog-btn{
-    background-color: rgba(203,0,40,1);
+    background-color: rgba(237,28,36,1);
     padding: 7px 10px 7px 10px;
     color: white!important;
     width: auto;
@@ -804,9 +877,9 @@
     font-family: 'Open Sans',sans-serif;
     font-weight: 100;
     left: -55px;
-    width: 60px;
+    width: 50px;
     top: 7px;
-    opacity: 0;
+    opacity: 1;
     transition:opacity 1s;
     -webkit-transition:opacity 1s;
     -moz-transition:opacity 1s;
@@ -926,7 +999,8 @@
 .project-view,.project-description{
 	opacity: 1;
 }
-/*#wrapper-employe{
+/*
+#wrapper-employe{
 	width: 120px;
 	height: 150px;
 	background-color: black;
@@ -951,6 +1025,7 @@
 
 }
 */
+
 	
 	/* phone */
 	@media only screen and (max-width: 360px)  {
@@ -1085,7 +1160,7 @@
 ?>
 
 <div class="container">
-<!-- 	<div id="wrapper-employe" class="hvr-buzz-out">
+	<div id="wrapper-employe" class="hvr-buzz-out">
 		<ul>
 			<li>
 				<img title="Invite new Employe" class="employe hvr-grow invite" src="<?php echo Yii::app()->request->baseUrl ; ?>/img/baru/user/add-employe.ico">
@@ -1095,7 +1170,7 @@
 			</li>
 			<div style="clear:both"></div>
 		</ul>
-	</div> -->
+	</div>
 
 	<div class="kontener"></div>
 	<div id="overlay" >
@@ -1105,14 +1180,6 @@
 		</div>
 	</div> 
 	<?php 
-	$baseurl = Yii::app()->request->baseUrl;
-	$id = Yii::app()->user->id;
-	if (Yii::app()->user->level()=='3'){		
-		$id_member = Member::model()->find("TRIM(email) = '$id'")->id;
-	}else{
-		$id_member = MemberSub::model()->find("TRIM(email) = '$id'")->id_member;
-
-	}
 	$sql_timeline = "SELECT pdm.id idviews ,ph.datetime, ph.project_id, 
 	pdm.name_file,
 	SUBSTRING_INDEX(pdm.name_file,'.',-1) AS ext
@@ -1182,66 +1249,20 @@
 	// echo "hahahakcuh";
 ?>
 <script>
-$(document).ready(function(){	
+$(document).ready(function(){
+	var project_list_pid;	
+	
+	function getFirstProject(){
+		var project_list_pid =  $('.project-list li.project ').eq(0).attr("pid");
+		$('.project-list ul li').eq(0).css("color","red");
+		getProjectData(project_list_pid);
+		// alert(project_list_pid);
+		// $('.project-list ul li').trigger("mouseover");
+	}
+	getFirstProject();
 
-
-	// var pusher = new Pusher("06626efc2ad436f73364");
-	// //subscribe to our notifications channel
-	// var notificationsChannel = pusher.subscribe('notifications');
-
-	// //do something with our new information
-	// notificationsChannel.bind('new_notification', function(notification){
-	//     // assign the notification's message to a <div></div>
-	//     var message = notification.message;
-	//     $('div.control_toggle').html(message);
-	// });
-	// var x = 0 ;
-	// var counter = 0;
-	// function reloadVariable(){
-		// x = $.ajax({
-		// 	dataType: "text", 
-		// 	url : "<?php echo Yii::app()->createUrl('Notification/getcount') ?>",
-		// 	async: false
-		// }).responseText;
-		// // return x;
-		// return x;
-	// }
-	// function compareVariable(){
-	// 	if (x>counter){
-	// 		$().toastmessage('showSuccessToast', 'You have '+x+' new Notification ');			
-	// 		counter = x;
-	// 		alert(x);
-	// 		alert(counter);
-	// 	}
-	// 	// alert('asd');
-	// }
-	// reloadVariable();
-	// setInterval(function(){
-	// 	x = $.ajax({
-	// 		dataType: "text", 
-	// 		url : "<?php echo Yii::app()->createUrl('Notification/getcount') ?>",
-	// 		async: false
-	// 	}).responseText;
-
-	// 	if (x>counter){
-	// 		$().toastmessage('showSuccessToast', 'You have '+x+' new Notification ');			
-	// 		counter = x;
-	// 	}
-	// 	// console.log("get x : "+x);
-	// }, 1000);
-
-	// setTimeout(alert("123"), 100);
-	// setInterval(function(){
-	// 	if (x>counter){
-	// 		$().toastmessage('showSuccessToast', 'You have '+x+' new Notification ');			
-	// 		counter = x;
-	// 		// console.log("post "+x);
-	// 		// alert(x);
-	// 		// alert(counter);
-	// 	}
-	// }, 200);
-
-	// }
+	$('.swipebox').swipebox();
+	var public_pid;
 	$('body').imagesLoaded( function() {
 	  	// alert("masuk");
 		$('#overlay').fadeOut();
@@ -1253,28 +1274,84 @@ $(document).ready(function(){
 	// $('#overlay').fadeOut();
 	// $('.top-header').hide();
 	// $('.loader').addClass('fadeInUp');
-	var eventData = [
-	    {"date":"2015-12-01","badge":false,"title":"Example 1"},
-	    {"date":"2015-12-02","badge":false,"title":"Example 2"}
-	];
-	$("#my-calendar").zabuto_calendar({
-	  data: eventData,
-      legend: [
-        {type: "text", label: "Special event", badge: "00"},
-        {type: "block", label: "Regular event", classname: "purple"},
-        {type: "spacer"},
-        {type: "text", label: "Bad"},
-        {type: "list", list: ["grade-1", "grade-2", "grade-3", "grade-4"]},
-        {type: "text", label: "Good"}
-      ],
-      // ajax: {
-      //   url: "show_data.php?grade=1"
-      // }
-    });
+	// var eventData = [
+	//     {"date":"2015-12-01","badge":false,"title":"Example 1"},
+	//     {"date":"2015-12-02","badge":false,"title":"Example 2"}
+	// ];
+	// $("#my-calendar").zabuto_calendar({
+	//   // data: eventData,
+	//   ajax: {
+ //          url: "<?php echo Yii::app()->createUrl('calendar/getdeadline') ?>",
+ //          modal: true
+ //      },
+	//   // year: 2015,
+ //   //    month: 3,
+ //      nilai : 1,
+ //      nav_icon: {
+ //        next: '<div  class="nav-cal nav-right" style="background-image:url(<?php echo Yii::app()->request->baseUrl; ?>/img/baru/user/right-btn-calendar.PNG)"></div>',
+ //        prev: '<div  class="nav-cal nav-left" style="background-image:url(<?php echo Yii::app()->request->baseUrl; ?>/img/baru/user/left-btn-calendar.PNG)"></div>',
+ //        // next: '<i class="fa fa-chevron-circle-right"></i>'
+ //      },
+ //      legend: [
+ //        {type: "text", label: "Special event", badge: "00"},
+ //        {type: "block", label: "Regular event", classname: "purple"},
+ //        {type: "spacer"},
+ //        {type: "text", label: "Bad"},
+ //        {type: "list", list: ["grade-1", "grade-2", "grade-3", "grade-4"]},
+ //        {type: "text", label: "Good"}
+ //      ],
+ //      // ajax: {
+ //      //   url: "show_data.php?grade=1"
+ //      // }
+ //    });
 	// $(document).on('mousemove','.project-circle',function(e){
 	// 	$(this).find('.project-circle-line').toggleClass('project-circle-line-show');
 	// 	// $(this).find('.project-circle-line').fadeIn();
 	// });
+		$('#my-calendar').fullCalendar({
+			header: {
+				left: 'prev',
+				right: 'next',
+				center: 'title',
+				// right: 'month,agendaWeek,agendaDay'
+			},
+		    events:  function(start, end, timezone, callback) {
+				        $.ajax({
+				            url: '<?php echo Yii::app()->createUrl('Project/getdeadline') ?>',
+				            dataType: 'html',
+				            cache : true,
+				            // data: {
+				            //     // our hypothetical feed requires UNIX timestamps
+				            //     start: start.unix(),
+				            //     end: end.unix()
+				            // },
+				            success: function(doc) {
+				            	// alert(doc);
+				                var events = [];
+				                var data = jQuery.parseJSON(doc);
+						 		data.forEach(function(result, index) {
+									$('.fc-day-number[data-date="'+result+'"]').css("color","red");
+				                    // events.push({
+				                    //     title: "..",
+				                    //     start: result,
+				                    //     className : 'duedatefull'
+				                    // });
+							 	});
+
+				                // $(doc).find('event').each(function() {
+				                // });
+				                // callback(events);
+				                // alert(JSON.stringify(events));
+				            }
+				        });
+				    },
+			defaultDate: '2015-12-12',
+			error: function(data) {
+				// $('#script-warning').show();
+				alert(JSON.stringify(data));
+			},
+		});
+		
 	location.hash = "home";
 	$('.upgrade-label-bold').on('click',function (e) {
 		alert(reloadVariable());
@@ -1293,6 +1370,9 @@ $(document).ready(function(){
 		});
 	});
 
+	$(document).on("click",".control_toggle",function(e){
+		$('header .logo img').toggleClass('show_logo');
+	});
 	$(document).on("mousemove","#home > *",function(e){
 		// alert('home');	
 		$('.menu-circle').css("background-color","white");
@@ -1328,14 +1408,46 @@ $(document).ready(function(){
 			window.location.hash = target;
 		});
 	});
-	$(document).on("click",".project-list ul .project",function(e){
-		// alert('masuk');
+	$(document).on("mouseover",".project-list ul li",function(e){
 		$('.project-list ul .project').css("color","white");
 		$(this).css("color","red");
 		var id = $(this).attr("pid");
+		getProjectData(id);
+	});
+	
+
+	// getProjectDeadline();
+	// function getProjectDeadline(){
+	// 	$.ajax({
+	// 		url : '<?php echo Yii::app()->createUrl('Project/getdeadline') ?>',
+	// 		success : function(data){
+	// 			// alert(data);
+	// 			var data = jQuery.parseJSON(data);
+	// 			// var tanggal = "2016-02-01";
+	// 			// alert(JSON.stringify(data));
+	// 			// alert($('.fc-day-number').length);
+	// 	 		data.forEach(function(result, index) {
+	// 				$('.fc-day-number[data-date="'+result+'"]').css("color","red");
+	// 		 	});
+
+	// 	 		// $('.fc-day-number').css("color","red");
+			
+	// 		},
+	// 		error :function(d){
+	// 			alert(JSON.stringify(d));
+	// 		}
+	// 	});
+	// }
+
+
+
+
+
+	function getProjectData(id){
 		$.ajax({
 			url : '<?php echo Yii::app()->createUrl('Project/getdetailproject') ?>',
 			data : 'id='+id,
+			cache : true,
 			success : function(data){
 				// alert(data);
 				var data = jQuery.parseJSON(data);
@@ -1347,19 +1459,22 @@ $(document).ready(function(){
 				$('.value[column="number_views"]').html(data.number_views);
 				$('.value[column="team"]').html(data.team);
 				$('.value[column="status"]').html(data.status);
-				// alert(JSON.stringify(data));	
-				// $('.project-view').css("background-image","url(<?php echo $baseurl ?>/img/comment/"+data.name_file+")");
-				// if (data.alias_name!='')
-				// 	$('.project-label').html(data.alias_name);
-				// else
-				// 	$('.project-label').html(data.name_file);
 
-				// alert(data);
+				//set zabuto
+				// $('#my-calendar').fullCalendar('refetchEvents');
+				$('#my-calendar').fullCalendar('gotoDate',data.due_date);
+				// alert(data.due_date);
+				// $('.fc-day-number[data-date="'+data.due_date+'"]').css("color","red");
+				$('#cal-proj-id').val(data.id);
+				// alert(data.id);
+				//end zabuto
+			},
+			error :function(d){
+				alert(JSON.stringify(d));
 			}
 		});
 
-
-	});
+	}
 
 
 

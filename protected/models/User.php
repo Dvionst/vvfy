@@ -52,7 +52,7 @@ class User extends CActiveRecord
 			array('username, password', 'length', 'max'=>30),
 			array('description', 'length', 'max'=>100),
 			array('username','unique','on'=>'register'),
-			array('username','email', 'on'=>'lost_password','message'=>'Please provide an email address'), 
+			array('username','email', 'on'=>'lost_password, register','message'=>'Please provide an email address'), 
 			array('username', 'required','on'=>'lost_password','message'=>'Please provide an email address'),
 			
 			
@@ -70,7 +70,7 @@ class User extends CActiveRecord
 			array('new_password', 'compare', 'compareAttribute'=>'new_password_repeat','operator'=>'=','message'=>'Password and confirm password must be same.','on'=>'reset_password'),
 			
 			array('last_login', 'required','on'=>'login'),
-			array('image', 'file', 'types'=>'jpg, png, jpeg','maxSize'=>1024*60,'on'=>'upload_photo'),
+			array('image', 'file', 'types'=>'jpg, png, jpeg','maxSize'=>1024*200,'on'=>'upload_photo'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			// array('username, password, level, description, confirm_email', 'safe', 'on'=>'search'),

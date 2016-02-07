@@ -149,14 +149,37 @@ class ClientController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new User('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['User']))
-			$model->attributes=$_GET['User'];
+			$this->layout = "landing";
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+		$filtersForm=new FiltersForm;
+			if (isset($_GET['FiltersForm']))
+				$filtersForm->filters=$_GET['FiltersForm'];	
+			// $user  = Yii::app()->user->name;
+			// $id = Nasabah::model()->find("username='$user'")->id_nasabah; 
+			// $status = Pengguna::model()->find('user=:un',array(':un'=>"$user"))->status;
+		
+			$dataProvider = Yii::app()->db->createCommand()
+			->select('*')
+			->from('member')
+			->queryAll();
+			// $string_model =  json_encode($dataProvider);
+			$filteredData=$filtersForm->filter($dataProvider);
+			$model=new CArrayDataProvider($filteredData,array(
+			 'sort'=>array(
+		        'attributes'=>array(
+		             'id', 'name', 'username','skype'
+		        ),
+		  	  ),
+		    'pagination'=>array(
+		        'pageSize'=>10,
+		    ),
+			)
+
+			);
+			$this->render('admin',array(
+				'model'=>$model,
+				'filtersForm' => $filtersForm,
+			));
 	}
 
 	/**

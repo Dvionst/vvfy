@@ -62,6 +62,32 @@
 	.content-right::-webkit-scrollbar-thumb:window-inactive {
 		background: red; 
 	}
+	.circle-name-project{
+		color: white;
+		margin-left: 70px;		
+		position: relative;		
+		width: 150px;
+		top: -40px;
+	}
+	.wrapper-project-timeline{
+		position: relative;
+	}
+	.wrapper-project-timeline .hold{
+		width: 120px;
+		height: 50px;
+		background-color: transparent;
+		position: absolute;
+		z-index: 200;
+		left: 117px;
+		cursor: pointer;
+		opacity: 0;
+	}
+	.wrapper-project-timeline .top-hold{
+		top: -20px;
+	}
+	.wrapper-project-timeline .bottom-hold{
+		bottom: -20px;
+	}
 
 
 </style>
@@ -89,7 +115,7 @@
 						<option  <?php if ($_REQUEST['project_id']==$key['id']) echo "selected"    ?> value="<?php echo $key['id']; ?>" ><?php echo $key['project_name']; ?></option>
 					<?php } ?>
 				</select>
-				<select style="text-transform:uppercase" name="project_phase" class="project-filter phase">
+				<select style="text-transform:uppercase;opacity:0" name="project_phase" class="project-filter phase">
 					<option value="all">ALL PHASE</option>
 					<?php foreach(Phase::model()->findAll() as $ps):?>
 						<option 
@@ -106,7 +132,9 @@
 				</select>
 			</div>
 
-			<div class="wrapper-project-timeline"></div>
+			<div class="wrapper-project-timeline">
+				
+			</div>
 
 			<div class="wrapper-desc-view">
 				<div class="project-loader"></div>
@@ -119,7 +147,7 @@
 						this is comment for the projectthis is comment for the projectthis is comment for the project
 					</div>
 					<div  class="project-goproject-btn">
-						 COMMENT THIS VIEW
+						 ADD COMMENT
 					</div>
 					<div class="wrapper-red-social">
 						<ul>
@@ -131,14 +159,20 @@
 					</div>
 				</div>
 				
-				<div class="project-view"></div>
+				<div class="project-view">
+
+
+				</div>
 				<div style="clear:both"></div>
 			</div>
 		</div>
 
 	</div>
+<!-- offline jqueryui -->
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<!-- online jqueryui -->
+<script src="<?php echo Yii::app()->baseUrl; ?>/js/jquery-ui.min.js"></script>
 
-	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript">
 // function stopNavigate(){    
 //     $(window).off('beforeunload');
@@ -148,17 +182,23 @@
 // }
 var stopReload = function (e) {
     e = e || window.event;
-
     // // For IE and Firefox prior to version 4
     if (e) {
         e.returnValue = 'Any string';
     }
-
     // // For Safari
     return 'Any string';
 };
 // window.onbeforeunload = stopReload;
 $(document).ready(function(){
+	$('.project-timeline').bind( 'mousewheel DOMMouseScroll', function ( e ) {
+	    var e0 = e.originalEvent,
+	        delta = e0.wheelDelta || -e0.detail;
+	    
+	    this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+	    e.preventDefault();
+	});
+
  	// $('a').on('mousedown', stopNavigate);
 
   //   $('a').on('mouseleave', function () {
@@ -213,34 +253,35 @@ $(document).ready(function(){
 		});
 	});
 		
-	$.fn.wPaint.defaults = {
-	  path:            '<?php echo Yii::app()->request->baseurl; ?>/js/paint/',                // set absolute path for images and cursors
-	  theme:           'standard classic', // set theme
-	  autoScaleImage:  true,               // auto scale images to size of canvas (fg and bg)
-	  autoCenterImage: true,               // auto center images (fg and bg, default is left/top corner)
-	  menuHandle:      true,               // setting to false will means menus cannot be dragged around
-	  menuOrientation: 'vertical',       // menu alignment (horizontal,vertical)
-	  menuOffsetLeft:  5,                  // left offset of primary menu
-	  menuOffsetTop:   5,                  // top offset of primary menu
-	  bg:              'red',               // set bg on init
-	  image:           'images/2.jpg',               // set image on init
-	  imageStretch:    false,              // stretch smaller images to full canvans dimensions
-	  onShapeDown:     null,               // callback for draw down event
-	  onShapeMove:     null,               // callback for draw move event
-	  onShapeUp:       null                // callback for draw up event
-	};
-	$.extend($.fn.wPaint.defaults, {
-	  mode:        'pencil',  // set mode
-	  lineWidth:   '3',       // starting line width
-	  fillStyle:   '#FFFFFF', // starting fill style
-	  strokeStyle: '#FFFF00'  // start stroke style
-	});
+	// $.fn.wPaint.defaults = {
+	//   path:            '<?php echo Yii::app()->request->baseurl; ?>/js/paint/',                // set absolute path for images and cursors
+	//   theme:           'standard classic', // set theme
+	//   autoScaleImage:  true,               // auto scale images to size of canvas (fg and bg)
+	//   autoCenterImage: true,               // auto center images (fg and bg, default is left/top corner)
+	//   menuHandle:      true,               // setting to false will means menus cannot be dragged around
+	//   menuOrientation: 'vertical',       // menu alignment (horizontal,vertical)
+	//   menuOffsetLeft:  5,                  // left offset of primary menu
+	//   menuOffsetTop:   5,                  // top offset of primary menu
+	//   bg:              'red',               // set bg on init
+	//   // image:           'images/2.jpg',               // set image on init
+	//   imageStretch:    false,              // stretch smaller images to full canvans dimensions
+	//   onShapeDown:     null,               // callback for draw down event
+	//   onShapeMove:     null,               // callback for draw move event
+	//   onShapeUp:       null                // callback for draw up event
+	// };
+	// $.extend($.fn.wPaint.defaults, {
+	//   mode:        'pencil',  // set mode
+	//   lineWidth:   '3',       // starting line width
+	//   fillStyle:   '#FFFFFF', // starting fill style
+	//   strokeStyle: '#FFFF00'  // start stroke style
+	// });
 	 $( "#image-editor" ).draggable({ handle: ".handle", containment: "body" });
 	 $(	"#image-editor").resizable();
 
 	var public_id_comment; 
 	var public_vid; 
 	var public_vid_url; 
+	var public_pid; 
 	var number = 0;
 	var id_pcm = 0;
 	var warna = 'red';
@@ -294,6 +335,9 @@ $(document).ready(function(){
 
 
 	function commentImage(view_id){
+		$().toastmessage('showWarningToast', ' ready soon ');
+		exit;
+
 		window.onbeforeunload = stopReload;
 		// alert(public_vid_url);
 		// alert(public_id_comment);
@@ -406,11 +450,25 @@ $(document).ready(function(){
 			     $('.project-list ul').animate({
 		          scrollTop: 600
 		      	  }, 1100);
-
-				// $('.project-list ul').html(data);
+	
+			// $('.project-list ul').html(data);
 			}
 		});
 	}
+	$(document).on("mouseover",".top-hold",function(e){
+		// alert("top");
+		// $('.project-timeline').scrollTo(0, 0);
+		 $('.project-timeline').animate({
+	          scrollTop: 0
+	  	  }, 1100);
+
+	});
+	$(document).on("mouseover",".bottom-hold",function(e){
+		 $('.project-timeline').animate({
+	          scrollTop: 200
+	  	  }, 1100);
+	});
+
 	$(document).on("click",".project-info-btn",function(e){
 		// alert("already soon");
 		$().toastmessage('showWarningToast', 'ready soon ');
@@ -502,7 +560,7 @@ $(document).ready(function(){
 	var choose_phid= 'all' ;
 	reloadCircleViews(choose_pid,choose_phid);
 	
-	reloadThumbnail(choose_pid,choose_phid);
+	// reloadThumbnail(choose_pid,choose_phid);
 	$(document).on("change",".project-filter",function(){
 			// var total = $('.project-timeline .ul li').length;
 			// alert(total);
@@ -551,9 +609,11 @@ $(document).ready(function(){
 			},
 			success : function(data){
 				$('.wrapper-project-timeline').html(data);
-					var first_idv = $('.project-timeline ul li .project-circle').eq(0).attr("idviews");
+				var first_idv = $('.project-timeline ul li .project-circle').eq(0).attr("idviews");
+				var first_idp = $('.project-timeline ul li .project-circle').eq(0).attr("id_project");
 				$('.project-circle').eq(0).css("border","2px solid white");
 				public_vid = first_idv;
+				public_pid = first_idp;
 				getDetailView();
 				$('#project .project-loader').fadeOut();
 			}
@@ -699,27 +759,31 @@ $(document).ready(function(){
 		$('#wPaint').wPaint('clear');
 	}
 	$(document).on("mouseover",".project-circle",function(e){
+		//set zabuto calendar
 		
+
+		//end of set zabuto calendar
 		var id = $(this).attr('idviews');
+		var idp = $(this).attr('id_project');
 		var index = $('.project-circle').index(this)+1;
-		// alert(index);
-		if (index%5==0){
-		     $('.project-timeline').animate({
-	          scrollTop: 600
-	      	  }, 1100);
-		}
 
 		$('.project-circle').css("border","2px solid transparent");
 		$(this).css("border","2px solid white");
 		public_vid = id;
+		public_pid = idp;
 		public_id_comment = $(this).attr('id_comment');
+		// alert(public_pid);
 		getDetailView();
+
 	});
+
+
+	//jika di scroll, maka tampil
 	$(window).scroll(function(){
-		var calendar = ($(window).scrollTop()>=$('#calendar').offset().top-200 && $(window).scrollTop()<=$('#calendar').offset().top+10);
+		var calendar = ($(window).scrollTop()>=$('#calendar').offset().top-100 && $(window).scrollTop()<=$('#calendar').offset().top+10);
 		var home = ($(window).scrollTop()>=$('#home').offset().top-200 && $(window).scrollTop()<=$('#home').offset().top+10);
-		var project = ($(window).scrollTop()>=$('#project').offset().top-200 && $(window).scrollTop()<=$('#project').offset().top+10);
-		var blog = ($(window).scrollTop()>=$('#blog').offset().top-200 && $(window).scrollTop()<=$('#blog').offset().top+10);
+		var project = ($(window).scrollTop()>=$('#project').offset().top-200 && $(window).scrollTop()<=$('#project').offset().top+70);
+		var blog = ($(window).scrollTop()>=$('#blog').offset().top-70 && $(window).scrollTop()<=$('#blog').offset().top+40);
 		// var dua = ($(window).scrollTop()>=0 && $(window).scrollTop()<=75 );
 		// var tiga = ($(window).scrollTop()>=$('#our-work').offset().top-500 && $(window).scrollTop()<=$('#our-work').offset().top+10);
 		// var image = ($(window).scrollTop()>=$('#our-work').offset().top-100 );
@@ -750,43 +814,59 @@ $(document).ready(function(){
 	});
 
 	function getDetailView(){
-		// alert()
 		$.ajax({
 			url : '<?php echo Yii::app()->createUrl('Project/getgambar') ?>',
-			data : 'id='+public_vid,
+			data : "idp="+public_pid,
 			beforeSend : function(data){
 				$('#project .project-loader').fadeIn();
 				$('#appcomment-fullscreen').fadeIn();
+				// $('.loader-pv').show();
+				// $('.project-view').css("background-color","red");
 			},
+			cache: true,
 			success : function(data){
+				// alert(data);
 				$('#project .project-loader').fadeOut();
 				// $('#project .project-loader').fadeOut();
-				$('#appcomment-fullscreen').fadeOut();
+				// $('#appcomment-fullscreen').fadeOut();
+				// $('.project-view').css("background-image","url(<?php echo $baseurl ?>/img/comment/"+data.name_file+")");
+				// // alert(data);
+				// var data = jQuery.parseJSON(data);
+				// // alert(JSON.stringify(data));
 				// alert(data);
-				var data = jQuery.parseJSON(data);
-				// alert(JSON.stringify(data));
-				$('.project-view').css("background-image","url(<?php echo $baseurl ?>/img/comment/"+data.name_file+")");
-				// alert(data.name_file);
-				public_vid_url = data.name_file;
-				public_id_comment = data.id_comment;
-				// var project = $('.choose-project .project option:selected').text();
-				// var phase = $('.choose-project .phase option:selected').text();
-				$('.team-working .name .value').html(data.project_name);
-				var value_phase =  $('.choose-project .phase option').eq(data.phase).text();
-				$('.team-working .phase .value').html(value_phase);
-
-				//untuk coversation
-				// $('#wrapper-conversation .header').html("123");
-				$('#wrapper-conversation .header .name p').html(data.project_name);
-				$('#wrapper-conversation .header .view_name p').html(value_phase);
+				// $('#wrapper-conversation').html(data).imagesLoaded().then(function(){
+    //     		   $('#wrapper-conversation .conv-loader').fadeOut();
+    //     		    // do stuff after images are loaded here
+    //    			});
 
 
+				$('.project-view').html(data).imagesLoaded().then(function(){
+					// $('.loader-pv').fadeOut();
+					// alert('loaded');
+        		   // $('#wrapper-conversation .conv-loader').fadeOut();
+        		    // do stuff after images are loaded here
+       			});
+				// // alert(data.name_file);
+				// public_vid_url = data.name_file;
+				// public_id_comment = data.id_comment;
+				// // var project = $('.choose-project .project option:selected').text();
+				// // var phase = $('.choose-project .phase option:selected').text();
+				// $('.team-working .name .value').html(data.project_name);
+				// var value_phase =  $('.choose-project .phase option').eq(data.phase).text();
+				// $('.team-working .phase .value').html(value_phase);
 
-				$('.project-label').html(data.name_view);
-				$('.project-comment-content').html(data.description);
-				$('.project-user').html(data.confirmer);
-				// alert(data.confirmer);	
-				$('#wrapper-appcomment .project-name p').html(data.name_view);
+				// //untuk coversation
+				// // $('#wrapper-conversation .header').html("123");
+				// $('#wrapper-conversation .header .name p').html(data.project_name);
+				// $('#wrapper-conversation .header .view_name p').html(value_phase);
+
+
+
+				// $('.project-label').html(data.name_view);
+				// $('.project-comment-content').html(data.description);
+				// $('.project-user').html(data.confirmer);
+				// // alert(data.confirmer);	
+				// $('#wrapper-appcomment .project-name p').html(data.name_view);
 			}
 		});
 	}

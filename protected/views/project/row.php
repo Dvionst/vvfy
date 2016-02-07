@@ -36,12 +36,9 @@ $('#schedule_project_id').val(<?php echo $de[id]?>);
 		<?php echo $de->id ?>
 	</td>
 	<td style="font-weight:bold;width:50px;font-size:15px" >
-		<!--
-			<div class="circle-user-color" style="background:<?php echo Member::model()->findByPk($de[id_member])->color ?>"	></div>
-		-->
 		<p style="margin-top:30px;">	<?php echo "ID-".$de[id] ?></p>
 	</td>
-	<td align="center" style="" >
+	<td align="center">
 		<div class="wrapper-name-project">
 			<!--<div class="project-name">LEBANON MALL CITY</div>-->
 			
@@ -61,6 +58,7 @@ $('#schedule_project_id').val(<?php echo $de[id]?>);
 		</div>
 		
 	</td>
+	<td align="center"><?php echo $de[id_member] ?></td>
 	<td align="center" style="font-size:15px;width:1px!important">
 		<?php if ($level==1){ ?>
 			<input class="editable-due" type="date" style="margin-left:50px;width:140px;margin-top:12px;" value="<?php echo $de[due_date] ?>" >
@@ -88,10 +86,17 @@ foreach ($detail as $d):
 	<!-- row for user -->
 	<td style="width:90px;">
 		<?php //if ($level==1): ?>
-		<!-- <img style="width:10px;cursor:pointer;display:inline;" idw="<?php echo $d->id ?>" class="del-worker" src="<?php echo Yii::app()->request->baseUrl; ?>/img/red-delete.png" class="img-folder" title="delete" > -->
+		<img style="width:10px;cursor:pointer;display:inline;" idw="<?php echo $d->id ?>" class="del-worker" src="<?php echo Yii::app()->request->baseUrl; ?>/img/red-delete.png" class="img-folder" title="delete" >
 		<?php //endif; ?>
-		
+		<?php
+
+		 $filename =Yii::app()->basePath."/../img/icon-team/$img";
+		if (file_exists($filename)){
+		?>		
 		<img style="width:30px;" src="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/<?php echo $img; ?>" >
+		<?php }else{ ?>
+		<img style="width:30px;" src="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/notfound.jpg ">
+		<?php } ?>
 	</td>
 
 
@@ -180,7 +185,16 @@ foreach ($detail as $d):
 					<?php 
 						$user = Project::model()->findByPk($de[id])->worker;
 					foreach (Team::model()->findAll() as $tim) :?>
-					<option value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/<?php echo $tim->image ?>" data-description=""></option>
+						<?php 
+						$filename =Yii::app()->basePath."/../img/icon-team/<?php echo $tim->image";
+						if ((file_exists($filename))&&($d['image']!="")) {
+						?>
+						<option value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/<?php echo $tim->image ?>" data-description=""></option>
+						<?php }else{ ?>
+						
+						<option value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/img/blog/notfound.jpg" data-description=""></option>
+						
+						<?php } ?>
 					<?php endforeach ;?>
 					<!--
 						<option selected value="Discover" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/rizki-new.jpg" data-description=""></option>
@@ -250,9 +264,22 @@ foreach ($detail as $d):
 			<option value="0" >ADD</option>
 			<?php 
 				$user = Project::model()->findByPk($de[id])->worker;
-			foreach (Team::model()->findAll() as $tim) :?>
-			<option value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/<?php echo $tim->image ?>" data-description=""></option>
-			<?php endforeach ;?>
+				foreach (Team::model()->findAll("position = 2") as $tim) :?>
+				
+				<?php 
+						$filename =Yii::app()->basePath."/../img/icon-team/$tim->image";
+						// $filename =Yii::app()->getBasePath()."\..\img\icon-team\<?php echo $tim->image";
+						// echo $filename;
+						if ((file_exists($filename))) {
+						?>
+						<option value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/<?php echo $tim->image ?>" data-description=""></option>
+						<!-- <option value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/<?php echo $tim->image ?>" data-description=""></option> -->
+						<?php }else{ ?>
+						
+						<option value="<?php echo $tim->id ?>" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/notfound.jpg" data-description=""></option>
+						
+						<?php } ?>
+				<?php endforeach ;?>
 			<!--
 				<option selected value="Discover" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/rizki-new.jpg" data-description=""></option>
 				<option value="cash" data-image="<?php echo Yii::app()->request->baseUrl ?>/img/icon-team/yuda-new.jpg" data-description="" ></option>
@@ -270,15 +297,18 @@ foreach ($detail as $d):
 		
 		<?php //if ($level==2){ ?>
 		<!-- <img style="width:20px;" src="<?php echo Yii::app()->request->baseUrl; ?>/img/upload.ico" class="img-upload" title="upload" >		 -->
-		<img style="width:20px;" src="<?php echo Yii::app()->request->baseUrl; ?>/img/icons/RedCons/Plus.ico" class="btn-add-views" title="Add views" >		
+		<!-- <img style="width:20px;" src="<?php echo Yii::app()->request->baseUrl; ?>/img/icons/RedCons/Plus.ico" class="btn-add-views" title="Add views" >		 -->
+		<i class=" fa fa-plus-circle btn-add-views"></i>
 		<?php //} ?>
-			<img style="width:20px;;height:18px" src="<?php echo Yii::app()->request->baseUrl; ?>/img/schedule.png" class="img-schedule" title="add schedule" >
-	
-		<a href="<?php echo Yii::app()->createUrl('project/view',array('id'=>$de[id])) ?>">
-			<img style="width:20px;;height:18px" src="<?php echo Yii::app()->request->baseUrl; ?>/img/icons/RedCons/Magnifier.ico"  title="see details" >
-		</a>
+			<!-- <img style="width:20px;;height:18px" src="<?php echo Yii::app()->request->baseUrl; ?>/img/schedule.png" class="img-schedule" title="add schedule" > -->
+		<i class="fa fa-calendar img-schedule"></i>
+		<!-- <a href="<?php echo Yii::app()->createUrl('project/view',array('id'=>$de[id])) ?>"> -->
+			<!-- <img style="width:20px;;height:18px" src="<?php echo Yii::app()->request->baseUrl; ?>/img/icons/RedCons/Magnifier.ico"  title="see details" > -->
+			<i style="color:black" class="fa fa-search"></i>
+		<!-- </a> -->
 		
-		<?php if ($level==1){ ?><img class="img-del" style="width:15px;margin-top:10px;" title="delete project" src="<?php echo Yii::app()->request->baseurl ?>/img/red-delete.png"><?php } ?>
+		<!-- <?php if ($level==1){ ?><img class="img-del" style="width:15px;margin-top:10px;" title="delete project" src="<?php echo Yii::app()->request->baseurl ?>/img/red-delete.png"><?php } ?> -->
+		<i class="fa-times fa img-del"></i>
 		<?php if ($level==1 || $level==2 ){ ?>
 		<!-- <img class="img-set-user" style="width:15px;margin-top:10px;height:18px" title="set user" src="<?php echo Yii::app()->request->baseurl ?>/img/red-user.png"> -->
 		<?php } ?>

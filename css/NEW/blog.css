@@ -3,16 +3,16 @@
     src: url('font/Raleway-Regular.ttf');
 }
 @font-face {
-    font-family: "Raleway-bold";
-    src: url('font/Raleway-Bold.ttf');
+    font-family: "font-bold";
+    src: url('font/font-bold.ttf');
 }
 @font-face {
     font-family: "Raleway-light";
     src: url('font/Raleway-Light.ttf');
 }
 @font-face {
-    font-family: "Raleway-thin";
-    src: url('font/Raleway-Thin.ttf');
+    font-family: "font-thin";
+    src: url('font/font-thin.ttf');
 }
 *{
 	font-family:Raleway;

@@ -33,10 +33,10 @@
 						$filename =Yii::app()->basePath."/../img/blog/$d[image]";
 						// echo $filename;
 						if ((file_exists($filename))&&($d['image']!="")) {?>
-							<img src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/<?php echo $d['image'] ?>"  alt="This is caption 1 <a href='#link'>Even with links!</a>">
+							<img src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/<?php echo $d['image'] ?>"  alt="">
 						<?
 						} else {?>
-							<img src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/notfound.jpg"  alt="This is caption 1 <a href='#link'>Even with links!</a>">
+							<img src="<?php echo Yii::app()->request->baseurl; ?>/img/blog/notfound.jpg"  alt="">
 					<?php	
 						}	
 					?>
@@ -72,7 +72,20 @@
 	<div id="blog-search">
 		<div class="wrapper-search">	
 			<input class="input-search-2" type="text" placeholder="SEARCH BLOG..." value="<?php echo $search?>">
-			<div class="submit"></div>
+			<?php
+				if(preg_match('/(?i)msie [5-8]/',$_SERVER['HTTP_USER_AGENT']))
+				{
+			?>
+				<img class="submit" src="<?php echo Yii::app()->createAbsoluteUrl('/img/baru/blog/search.png'); ?>"><span></span></img>
+			<?php
+				}
+				else
+				{
+			?>
+				<div class="submit" style="background-image: url('<?php echo Yii::app()->request->baseUrl; ?>/img/baru/blog/search.png');"></div>	
+			<?php
+				}
+			?>
 		</div>
 	</div>
 	<div id="wrapper-post">
@@ -129,47 +142,11 @@
 	// Utility function for this set of functions
 	var quick;
 	var $container;	
-	const incPost = 3;
+	var incPost = 3;
 	var curOffset = 0;
 	var category = '<?php echo $_GET["category"]?>';
 
-	var didScroll;
-	var lastScrollTop = 0;
-	var delta = 5;
-	var navbarLimit = 400;
-
-	function hasScrolled() {
-	    var st = $(this).scrollTop();
-
-	    // Make sure they scroll more than delta
-	    if(Math.abs(lastScrollTop - st) <= delta)
-	        return;
-	    
-	    // If they scrolled down and are past the navbar, add class .nav-up.
-	    // This is necessary so you never see what is "behind" the navbar.
-	    if (st > lastScrollTop && st > navbarLimit){
-	        // Scroll Down
-	        $('header').removeClass('nav-down').addClass('nav-up');
-	    } else {
-	        // Scroll Up
-	        if(st + $(window).height() < $(document).height()) {
-	            $('header').removeClass('nav-up').addClass('nav-down');
-	        }
-    	}
-    	lastScrollTop = st;
-	}
-
-	$(window).scroll(function(event){
-		didScroll = true;
-	});
-
-	setInterval(function() {
-	    if (didScroll) {
-	        hasScrolled();
-	        didScroll = false;
-	    }
-	}, 250);	
-
+	
 	// debounce so filtering doesn't happen every millisecond
 	function debounce( fn, threshold ) {
 	  var timeout;
@@ -337,6 +314,14 @@
 	</script>
 
 
-	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/slipry/dist/slippry.min.js"></script>
-	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/isotope-docs.min.js"></script>
-	<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/packery-mode.pkgd.min.js"></script>
+<!--[if lt IE 9]>
+	<script>
+		$('input, textarea').placeholder();
+	</script>	
+	<style>
+		.placeholder { color: white; }
+	</style>
+<![endif]-->	
+
+
+

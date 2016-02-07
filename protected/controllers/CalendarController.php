@@ -27,7 +27,7 @@ class CalendarController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','hapus','editdesc'),
+				'actions'=>array('getdeadline','index','view','hapus','editdesc'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -53,6 +53,22 @@ class CalendarController extends Controller
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
+	}
+
+	public function actionGetDeadline($id){
+		$model2 = array();
+		$model = Project::model()->findByPk($id);
+		$model2[0]["title"] = " " ; 
+		$model2[0]["start"] = $model->due_date; 
+		// $model2[0]["title"] = $model->project_name; 
+		// $model2[0]["footer"] = "Paisley city"; 
+		// $model2[0]["classname"] = "cinta";
+
+		// echo "<pre>";
+		// print_r($model);
+		// echo "<pre>";
+		echo json_encode($model2);
+
 	}
 
 	/**

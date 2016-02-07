@@ -9,44 +9,39 @@ $this->menu=array(
 	array('label'=>'Create Promotion', 'url'=>array('create')),
 );
 
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('promotion-grid', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
-<h1>Manage Promotions</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
+<h1>Manage Promotions <a href="<?php echo Yii::app()->controller->createUrl("create"); ?>"><i class="fa fa-plus"></i></a></h1>
+<?php 
+// $this->renderPartial("menu");
+?>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'promotion-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+	'dataProvider'=>$model,
+	'filter'=>$filtersForm,
 	'columns'=>array(
 		'id',
 		'name',
-		'valid_date',
+		array(
+		   'name'=>'valid_date',
+		   'header'=>'Valid Date',
+		),
+		// 'status',
 		array(
 			'class'=>'CButtonColumn',
+			'template'=>'{update}{delete}{view}',
+			'buttons' => array(
+				'update' => array(
+					'url'=>'Yii::app()->controller->createUrl("update", array("id"=>$data[id]))',      //A PHP expression for generating the URL of the button.
+				),
+				'delete' => array(
+					'url'=>'Yii::app()->controller->createUrl("delete", array("id"=>$data[id]))',      //A PHP expression for generating the URL of the button.
+				),
+				'view' => array(
+					'url'=>'Yii::app()->controller->createUrl("view", array("id"=>$data[id]))',      //A PHP expression for generating the URL of the button.
+				),
+			),	
 		),
 	),
 )); ?>

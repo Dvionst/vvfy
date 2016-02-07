@@ -1,5 +1,5 @@
 @font-face {
-    font-family: Raleway;
+    font-family: "Raleway";
     src: url('font/Raleway-Regular.ttf');
 }
 @font-face {
@@ -16,7 +16,7 @@
 }
 @font-face {
     font-family: "ebrima";
-    src: url('font/ebrima.ttf');
+    src: url('font/Raleway-Regular.ttf');
 }
 *{
 	font-family:Raleway;

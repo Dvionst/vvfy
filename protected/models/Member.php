@@ -40,7 +40,7 @@ class Member extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('email, name', 'unique', 'on'=>'register'),
-			array('name, type_account', 'required', 'on'=>'register'),
+			array('type_account', 'required', 'on'=>'register'),
 			// array('name, email, date_register,phone,address', 'required'),
 			array('id_mc', 'numerical', 'integerOnly'=>true),
 			array('name, email', 'length', 'max'=>50),

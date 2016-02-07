@@ -68,113 +68,148 @@
 				
 			</div>
 			<style>
-			.dash-non-editabble-project,dash-non-editabble-date{
-				display:block;
-			}
-			.dash-editabble-project,.dash-editabble-date{
-				display:none;
-			}
-			#edit-team:hover{
-				color:black;
-			}
+		
 			</style>
-			<table style="text-align:center;color:white;width:90%;font-size:22px" >
-					<?php 
-				$dataProvider = Yii::app()->db->createCommand()
-				->select('t.id idt,p.id idp,t.name namew,p.project_name,p.username, p.due_date,p.status sp,pd.task_id pts')
-				->from('project_detail pd')
-				->rightjoin('team t',' t.id = pd.worker_id   ')
-				->leftjoin('project p',' p.id = pd.project_id and p.status = 1  ')
-				// ->having('pd.doing = 1')
-				->group('t.id')
-				->queryAll();
-					?>
-				<?php 
+			<script type="text/javascript">
+				$(document).ready(function(){
+					// $('select[multiple]').multiselect();
+					$('#wrapper-redbox').bind('mousewheel DOMMouseScroll', function(e) {
+					    var scrollTo = null;
+					    // alert("masuk");
+					    if (e.type == 'mousewheel') {
+					        scrollTo = (e.originalEvent.wheelDelta * -1);
+					    }
+					    else if (e.type == 'DOMMouseScroll') {
+					        scrollTo = 40 * e.originalEvent.detail;
+					    }
+
+					    if (scrollTo) {
+					        e.preventDefault();
+					        $(this).scrollTop(scrollTo + $(this).scrollTop());
+					    }
+					});
+
+
+				});
+			</script>
+			<div id="wrapper-redbox">				
+				<table style="text-align:center;color:white;width:90%;font-size:22px" >
+						<?php 
+					$dataProvider = Yii::app()->db->createCommand()
+					->select('t.id idt,p.id idp,t.name namew,p.project_name,p.username, p.due_date,p.status sp,pd.task_id pts')
+					->from('project_detail pd')
+					->rightjoin('team t',' t.id = pd.worker_id   ')
+					->leftjoin('project p',' p.id = pd.project_id and p.status = 1  ')
+					->where('t.position = 2')
+					->group('t.id')
+					->queryAll();
+
+					
 					$listproject = Project::model()->findAll('t.status=1');
 					$liststatus  = Status::model()->findAll();
-				?>
-				<?php foreach ($dataProvider as $d):?>
-				<tr class="size-15" style="" >
-					<td style="width:30px">&nbsp;<?php echo $d['namew'] ?></td>
-					<td >
-						<div class="dash-non-editabble-project" >
-							<?php echo $d['project_name']; ?>
-						</div>
-							
-						<div class="dash-editabble-project" >
-						<?php 
-							if ($d['due_date']!=''): 
-							// echo $d['idp'];
-							?>
-							<select manager="<?php echo Yii::app()->user->id; ?>" worker = "<?php echo $d['idt'] ?>" class='dash-proj-name' style="background:transparent;border:none;color:white">
-								<option class="option" value="0">choose</option>
-								<?php foreach ($listproject as $l):  ?>
-									<option  value="<?php echo $l->id;?>" <?php if ($l->id==$d['idp']) echo "selected"; ?> class="option" ><?php echo $l->project_name ?></option>
-								<?php endforeach; ?>
-							</select>
-						<?php else:?>
-							<select manager="<?php echo Yii::app()->user->id; ?>" worker = "<?php echo $d['idt'] ?>" class='dash-proj-name' style="background:transparent;border:none;color:white">
-								<option     class="option" value="0">choose</option>
-								<?php foreach ($listproject as $l):  ?>
-									<option   class="option" value="<?php echo $l->id;?>"><?php echo $l->project_name ?></option>
-								<?php endforeach; ?>
-							</select>
-						<?php endif;?>
-						</div>
-					</td>
-					<td>
-						<div class="dash-editabble-date" >
-							<?php if ($d['due_date']!=''): ?>
-								<input style="background:transparent;border:none;color:white"  type="date" value="<?php echo $d['due_date']; ?>">
-							<?php endif;?>
-						</div>
-						<div class="dash-non-editabble-date" >
-							<?php if ($d['due_date']!=''): 
-								echo $d['due_date'];
-							?>
-							
-							<?php endif;?>
-						</div>
+					?>
+					<?php foreach ($dataProvider as $d):
+					$array = array();
+					$sql = "select * from project_detail pd,project p where worker_id = '$d[idt]' and p.id = pd.project_id  ";
+					// echo $sql;
+					$proyek_user = Yii::app()->db->createCommand($sql)->queryAll();
+					// echo "jumlah proyek ".count($proyek_user);
+					// ECHO "<PRE>";
+					// print_r($proyek_user);
+					// ECHO "</PRE>";
+					foreach ($proyek_user as $pu) {
+						array_push($array,$pu[project_id]);
+						// echo $pu[project_id]." ,";
+					}
+					// print_r($array);
+					?>
+					<tr class="size-15" style="" >
+						<td style="width:30px">&nbsp;<?php echo $d['namew'] ?></td>
+						<td>
+							<?php foreach ($proyek_user as $pu):  ?>
+							<div style="" class="dash-non-editabble-project" >
+								<?php echo $pu['project_name']; ?>
+							</div>
+						<?php endforeach; ?>
+								
+							<div class="dash-editabble-project" >
+							<?php 
+								if ($d['due_date']!=''): 
+								// echo $d['idp'];
+								?>
+								<select multiple="" manager="<?php echo Yii::app()->user->id; ?>" worker = "<?php echo $d['idt'] ?>" class='dash-proj-name' style="background:transparent;border:none;color:white">
+									<option class="option" value="0">choose</option>
+									<?php foreach ($listproject as $l):  ?>
+										<option <?php if (in_array($l->id, $array)) echo "selected" ?>  value="<?php echo $l->id;?>" <?php if ($l->id==$d['idp']) echo "selected"; ?> class="option" ><?php echo $l->project_name ?></option>
+									<?php endforeach; ?>
+								</select>
+							<?php else:?>
 
-					</td>
-					<td>
-						<?php echo Task::model()->findByPk($d['pts'])->name; ?>
-					<!--
-						<?php 
-							// echo $d['sp'];
-						if ($d['due_date']!=''): ?>
-							<select style="background:transparent;border:none;color:white" disabled>
-								<option class="option" value="0">choose</option>
-								<?php foreach ($liststatus as $l):  ?>
-									<option value="<?php echo $l->id; ?>" <?php if ($l->id==$d['sp']) echo "selected";else echo "eror" ?> class="option" value="0"><?php echo $l->name?></option>
-								<?php endforeach; ?>
-							</select>
-						<?php else: ?>
-							<select style="background:transparent;border:none;color:white" disabled>
-								<option class="option" value="0">choose</option>
-								<?php foreach ($liststatus as $l):  ?>
-									<option value="<?php echo $l->id; ?>"  class="option" value="0"><?php echo $l->name?></option>
-								<?php endforeach; ?>
-							</select>
+								<select  manager="<?php echo Yii::app()->user->id; ?>" worker = "<?php echo $d['idt'] ?>" class='dash-proj-name' style="background:transparent;border:none;color:white">
+									<option  class="option" value="0">choose</option>
+									<?php foreach ($listproject as $l):  ?>
+										<option   class="option" value="<?php echo $l->id;?>"><?php echo $l->project_name ?></option>
+									<?php endforeach; ?>
+								</select>
 
-						<?php endif;?>
-					-->
+							<?php endif;?>
+							</div>
+						</td>
+						<td>
+						
+							<!-- <div class="dash-editabble-date" > -->
+								<?php //if ($d['due_date']!=''): ?>
+								<!-- <input  style="background:transparent;border:none;color:white"  type="date" value="<?php echo $d['due_date']; ?>"><?php //endif;?> -->
+							<!-- </div> -->
+							<!-- <div class="dash-non-editabble-date" ><?php //if ($d['due_date']!=''):// echo $d['due_date']; ?><?php //endif;?></div> -->
+
+						</td>
+						<td>
+							<?php //echo Task::model()->findByPk($d['pts'])->name; ?>
+						<!--
+							<?php 
+								// echo $d['sp'];
+							if ($d['due_date']!=''): ?>
+								<select style="background:transparent;border:none;color:white" disabled>
+									<option class="option" value="0">choose</option>
+									<?php foreach ($liststatus as $l):  ?>
+										<option value="<?php echo $l->id; ?>" <?php if ($l->id==$d['sp']) echo "selected";else echo "eror" ?> class="option" value="0"><?php echo $l->name?></option>
+									<?php endforeach; ?>
+								</select>
+							<?php else: ?>
+								<select style="background:transparent;border:none;color:white" disabled>
+									<option class="option" value="0">choose</option>
+									<?php foreach ($liststatus as $l):  ?>
+										<option value="<?php echo $l->id; ?>"  class="option" value="0"><?php echo $l->name?></option>
+									<?php endforeach; ?>
+								</select>
+
+							<?php endif;?>
+						-->
+						</td>
+					<td>
+					<?php// echo 'by '. $d['username']?>
 					</td>
-				<td>
-				<?php// echo 'by '. $d['username']?>
-				</td>
-				</tr>
-				<?php endforeach; ?>
-			
-			</table>
-					<div class="btn view-project">	
-						<div class="status-work">
-							<?php// echo Status::model()->findByPk(Project::model()->find("username='$userid' and status <>5")->status)->name; ?>
-						</div>
-					<div><a  style="bottom:-110px;color:white;text-decoration:none;right:50px;position:absolute;" href="<?php echo Yii::app()->createAbsoluteUrl('land/project'); ?>">VIEW ALL PROJECTS</a></div>
-					</div>
+					</tr>
+					<?php endforeach; ?>
+				
+				</table>
+			</div>
+
+
+			<div class="btn view-project">	
+				<div class="status-work">
+					<?php// echo Status::model()->findByPk(Project::model()->find("username='$userid' and status <>5")->status)->name; ?>
+				</div>
+				<div><a  style="bottom:-80px;color:white;text-decoration:none;right:50px;position:absolute;" href="<?php echo Yii::app()->createAbsoluteUrl('land/project'); ?>">VIEW ALL PROJECTS</a></div>
+			</div>
 			
 		</div>
 		
 		<?php endif; ?>
-		
+<script type="text/javascript">
+$(document).ready(function(){
+// alert($('.dash-proj-name').attr("multiple"));
+$('.dash-proj-name').select2();
+});
+</script>

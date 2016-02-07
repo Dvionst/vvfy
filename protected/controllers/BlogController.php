@@ -36,7 +36,7 @@ class BlogController extends Controller
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin'),
-				'users'=>array('admin'),
+				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -214,14 +214,15 @@ class BlogController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$this->layout = "landing";
+		$model=Blog::model()->findByPk($id);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['CategoriesMain']))
+		if(isset($_POST['Blog']))
 		{
-			$model->attributes=$_POST['CategoriesMain'];
+			$model->attributes=$_POST['Blog'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -306,14 +307,45 @@ class BlogController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new CategoriesMain('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['CategoriesMain']))
-			$model->attributes=$_GET['CategoriesMain'];
+		$this->layout = "landing";
+		// $model=new Blog('search');
+		// $model->unsetAttributes();  // clear any default values
+		// if(isset($_GET['Blog']))
+		// 	$model->attributes=$_GET['Blog'];
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+		// $this->render('admin',array(
+		// 	'model'=>$model,
+		// ));
+		$filtersForm=new FiltersForm;
+			if (isset($_GET['FiltersForm']))
+				$filtersForm->filters=$_GET['FiltersForm'];	
+			// $user  = Yii::app()->user->name;
+			// $id = Nasabah::model()->find("username='$user'")->id_nasabah; 
+			// $status = Pengguna::model()->find('user=:un',array(':un'=>"$user"))->status;
+		
+			$dataProvider = Yii::app()->db->createCommand()
+			->select('*')
+			->from('blog')
+			->queryAll();
+			// $string_model =  json_encode($dataProvider);
+			$filteredData=$filtersForm->filter($dataProvider);
+			$model=new CArrayDataProvider($filteredData,array(
+			 'sort'=>array(
+		        'attributes'=>array(
+		             'id', 'title', 'datetime','username',
+		        ),
+		  	  ),
+		    'pagination'=>array(
+		        'pageSize'=>10,
+		    ),
+			)
+
+			);
+			$this->render('admin',array(
+				'model'=>$model,
+				'filtersForm' => $filtersForm,
+			));
+		
 	}
 
 	/**

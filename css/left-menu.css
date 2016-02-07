@@ -327,7 +327,7 @@
 		moz-transition:200ms color;
 		webkit-transition:200ms color;
 		transition:200ms color;
-		font-family: Raleway-Bold !important;
+		font-family: font-bold !important;
 		color: white;
 		font-size: 20px;
 		position: absolute;
@@ -344,7 +344,7 @@
 
 
 	.detail-ba{
-		font-family: Raleway-Thin !important;
+		font-family: font-thin !important;
 		color: white;
 		font-size: 8px;
 		position: absolute;
@@ -375,7 +375,7 @@
 		/*moz-transition:200ms color;
 		webkit-transition:200ms color;
 		transition:200ms color;*/
-		font-family: Raleway-Bold !important;
+		font-family: font-bold !important;
 		color: white;
 		font-size: 10px;
 		position: absolute;
@@ -422,7 +422,7 @@
 		moz-transition:200ms color;
 		webkit-transition:200ms color;
 		transition:200ms color;
-		font-family: Raleway-Bold !important;
+		font-family: font-bold !important;
 		color: white;
 		font-size: 20px;
 		position: absolute;
@@ -438,7 +438,7 @@
 	}
 
 	.detail-box-3{
-		font-family: Raleway-Thin !important;
+		font-family: font-thin !important;
 		color: white;
 		font-size: 8px;
 		position: absolute;
@@ -520,12 +520,12 @@
 		top:45px;
 		margin-left: 15px;
 		font-size: 9px;
-		font-family: Raleway-Thin !important;
+		font-family: font-thin !important;
 	}
 
 
 	.btn-calc{
-		font-family: Raleway-Bold !important;
+		font-family: font-bold !important;
 		width:300px;
 		background-color: rgba(208,150,7,1);
 		/*height: 20px;*/
@@ -553,7 +553,7 @@
 	    background-color: rgba(255,255,255,0.1);
 	    /*position: absolute;*/
 	    float: left;
-	    font-family: Raleway-Thin !important;
+	    font-family: font-thin !important;
 	}
 
 
@@ -562,7 +562,7 @@
 		letter-spacing: 2px;
 		margin-bottom: 25px;
 		font-size: 10px;
-		font-family: Raleway-Thin !important;
+		font-family: font-thin !important;
 		margin-left:10px;
 		margin-top:15px;
 	}
@@ -596,7 +596,7 @@
 		letter-spacing: 1px;
 		color: white;
 		text-decoration: none !important;
-		font-family: Raleway-Thin !important;
+		font-family: font-thin !important;
 	}
 
 	.inline li a:hover{
@@ -629,7 +629,7 @@
 	    /* padding: 25px 0px 100px 70px; */
 	    position: relative;
 	    top: 80px;
-	    padding-bottom: 70px;
+	    padding-bottom: 20px;
 	}
 	.wrapper-calc .label{
 		color: #CCCCCC;
@@ -639,10 +639,12 @@
 	}
 	.wrapper-calc input[type="text"],.wrapper-calc select{
 		background-color: rgba(77,77,77,1)!important;
+		background-color: #4D4D4D;
 		border: none;
 		padding: 10px;
 		width: 90%;
 		color: white!important;
+		border: 1px solid #4D4D4D;
 	}
 
 	.wrapper-calc .label .helper{
@@ -652,20 +654,22 @@
 	}
 
 	.wrapper-calc .calc-get-started{
-		text-align: center;
+	    text-align: center;
 	    color: #CCCCCC;
 	    padding-right: 30px;
 	    font-size: 15px;
 	    position: relative;
 	    letter-spacing: 1px;
-	    font-family: Raleway-Bold;
+	    font-family: font-bold;
 	    margin-top: 50px;
+	    margin-bottom: 50px;
+	    
 	}
 
 	.wrapper-calc .area-type{
 	    width: 50% !important;
 	    text-transform: uppercase;
-	    height: 40px;
+	    height: 42px;
 	}
 
 	.wrapper-calc .area-size{
@@ -684,7 +688,7 @@
 	#btn-submit-calc{
 	    position: relative;
 	    /* top: 30px; */
-	    right: 30px;
+	    /* right: 30px; */
 	    background: transparent !important;
 	    border: 1px solid #A6A6A6 !important;
 	    color: #A6A6A6 !important;
@@ -698,6 +702,9 @@
 	    border-radius: 0px;
 	    -webkit-border-radius: 0px;
 	    width: 80px;
+	    margin-left: 35px;
+	    margin-top: 40px;
+	    /* left: 0px; */
 
 /*		background-color:rgba(95,142,181,1);
 		padding: 10px;
@@ -727,7 +734,7 @@
 	.table-leftmenu .row > .label{
 		float: left;
 		width: 40%;
-		font-family: Raleway-Light !important;
+		font-family: font-light !important;
 		font-size: 11px;
 	}
 
@@ -748,7 +755,7 @@
 
 .container-radio input[type="radio"] + label {
   color: #CCCCCC;
-  font-family: Raleway-Light !important;
+  font-family: font-light !important;
   font-size: 10px;
   cursor: pointer;
   letter-spacing: 3px;
@@ -771,7 +778,7 @@
 
 .container-radio input[type="radio"]:checked + label{
     color: red !important;
-    font-family: Raleway-Light !important;
+    font-family: font-light !important;
     font-size: 10px;
 }
 
@@ -799,10 +806,11 @@
 
 .radio-register input[type="radio"] + label {
   color: #A6A6A6;
-  font-family: Raleway-Light !important;
+  font-family: font-light !important;
   font-size: 12px;
   cursor: pointer;
-  background-color: rgba(77,77,77,1);
+  background-color: rgba(77,77,77,1) !important;
+  background-color: #4D4D4D;  /* IE */
   padding:10px 50px 10px 50px;
 }
 
@@ -811,6 +819,7 @@
   vertical-align: middle;
   cursor: pointer;
   background-color: rgba(77,77,77,1);
+  background-color: #4D4D4D;  /* IE */
 }
 
 
@@ -891,6 +900,7 @@
 	width: 95%!important;
 	margin-top: 18px;
 	background-color: rgba(77,77,77,1)!important;
+	background-color: #4D4D4D;  /* IE */
 	border:1px solid #4D4D4D;
 	padding: 7px;
 
@@ -915,7 +925,7 @@
 	margin: 0 auto;
 	text-align: center;
 	letter-spacing: 2px;
-	font-family: Raleway-Thin !important;
+	font-family: font-thin !important;
 	font-size: 10px;
 }
 
@@ -992,6 +1002,7 @@
 	width: 95%!important;
 	margin-top: 18px;
 	background-color: rgba(77,77,77,1)!important;
+	background-color: #4D4D4D;  /* IE */
 	border:none;
 	padding: 7px;
 	margin-left: 8px;
@@ -1033,7 +1044,7 @@
 	margin: 0 auto;
 	text-align: center;
 	letter-spacing: 2px;
-	font-family: Raleway-Light !important;
+	font-family: font-light !important;
 	font-size: 10px;
 	color: black;
 }
@@ -1075,7 +1086,7 @@
 
 .right-menu a{
 	color: white;
-	font-family: Raleway-Thin !important;
+	font-family: font-thin !important;
 	letter-spacing: 4px;
 }
 
@@ -1108,7 +1119,7 @@
 	position: relative;
 	right : 5px;
 	/*margin:0 0 0 -30px ;*/
-	font-family: Raleway-Thin !important;
+	font-family: font-thin !important;
 }
 
 .heading-menu{
@@ -1121,7 +1132,7 @@
     position: relative;
     right: -25px;
     line-height: 30px;
-    font-family: Raleway-Bold !important;
+    font-family: font-bold !important;
 }
 
 div.play-button { 
@@ -1142,14 +1153,14 @@ div.play-button {
     margin-left: 150px;
     margin-top: 30px;
     color: red;
-    font-family: Raleway-Bold;
+    font-family: font-bold;
     display: none;
     font-size: 11px; 
 }
 
 #login-error span{
 	color: green;
-    font-family: Raleway-Bold;
+    font-family: font-bold;
     font-size: 12px;
 }
 
@@ -1179,7 +1190,7 @@ div.play-button {
     margin-left: 10px;
     margin-top: 0px;
     color: red;
-    font-family: Raleway-Bold !important;
+    font-family: font-bold !important;
     display: none;
     font-size: 11px;
 }
@@ -1210,7 +1221,7 @@ div.play-button {
 
 
 #signup-error .errorMessage{
-	font-family: Raleway-Bold !important;
+	font-family: font-bold !important;
 	font-size: 11px !important;
 }
 
@@ -1270,7 +1281,7 @@ div.play-button {
     position: relative;
     text-align: center;
     color: white;
-    font-family: Raleway-Bold;
+    font-family: font-bold;
     font-size: 20px;
     top: 25px;
     margin: auto;
@@ -1289,7 +1300,7 @@ div.play-button {
 }
 
 #reg-conf-detail span{
-	font-family: Raleway-Bold;
+	font-family: font-bold;
 }
 
 #reg-conf-close{
@@ -1327,7 +1338,7 @@ div.play-button {
     overflow: hidden;
     width: 400px;
     height: auto;
-    position: absolute;
+    position: relative;
     background-color: #2D2D2D;
     color: white;
     /* float: left; */
@@ -1337,14 +1348,15 @@ div.play-button {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    left: 590px;
+    left: 10px;
     display: none;
+    /* margin-left: 100px; */
 }
 
 #reset-pass-title{
 	color: #A6A6A6;
     font-size: 20px;
-    font-family: raleway-bold;
+    font-family: font-bold;
     letter-spacing: 2px;
     margin-top: 10px;
 }
@@ -1354,7 +1366,8 @@ div.play-button {
     /* margin-left: 10px; */
     margin-top: 10px;
     background-color: rgba(77,77,77,1)!important;
-    border: 1px solid #191919;
+    background-color: #4D4D4D;  /* IE */
+    border: 1px solid #4D4D4D;
     padding: 7px;
 }
 
@@ -1389,7 +1402,7 @@ div.play-button {
     /* margin-left: 150px; */
     margin-top: 15px;
     color: red;
-    font-family: Raleway-Bold;
+    font-family: font-bold;
     display: none;
     font-size: 11px;
 }
@@ -1611,7 +1624,7 @@ textarea:-ms-input-placeholder {
 #wrapper-profile #acc-info #acc-info-pic{
 	position: absolute;
     width: 180px;
-    height: 230px;
+    height: 220px;
     margin-top: 10px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -1645,10 +1658,10 @@ textarea:-ms-input-placeholder {
 
 #wrapper-profile #acc-info #acc-info-detail{
 	position: absolute;
-    left: 200px;
+    left: 185px;
     width: 200px;
     top: 50px;
-    font-family: Raleway-Light;
+    font-family: font-light;
     font-size: 10px;
     line-height: 18px;
 }
@@ -1663,7 +1676,7 @@ textarea:-ms-input-placeholder {
     float: left;
     padding: 10px;
     letter-spacing: 3px;
-    font-family: Raleway-Bold;
+    font-family: font-bold;
 }
 
 #wrapper-profile #acc-notification a{
@@ -1708,7 +1721,7 @@ textarea:-ms-input-placeholder {
 .notification-msg #notif-desc{
     position: relative;
     font-size: 10px;
-    font-family: Raleway-light;
+    font-family: font-light;
     letter-spacing: 1px;
     padding: 0 5px 0 5px;
     height: 40px;
@@ -1769,6 +1782,7 @@ position: relative;
 	#wrapper-profile #acc-pass input[type="password"]{
 		border:1px solid #2D2D2D;
 	    background-color: rgba(77,77,77,1)!important;
+	    background-color: #4D4D4D;  /* IE */
 	    padding: 9px;
 	    width: 100%!important;
 	    color: white!important;
@@ -1799,7 +1813,7 @@ position: relative;
 	.table-leftmenu-2 .row > .label{
 		float: left;
 		width: 40%;
-		font-family: Raleway-Light !important;
+		font-family: font-light !important;
 		font-size: 11px;
 	}
 
@@ -1835,7 +1849,7 @@ position: relative;
 	    position: relative;
 	    left: 15px;
 	    letter-spacing: 3px;
-	    font-family: Raleway-Bold;
+	    font-family: font-bold;
 	}
 
 	#acc-pass #acc-pass-button{
@@ -1872,7 +1886,7 @@ position: relative;
 	    bottom: 30px;
 	    left: 15px;
 	    color: green;
-	    /* font-family: Raleway-Bold; */
+	    /* font-family: font-bold; */
 	    letter-spacing: 1px;
 	}
 
@@ -1897,6 +1911,7 @@ position: relative;
 	#wrapper-profile #acc-edit input[type="text"]{
 		border:1px solid #2D2D2D;
 	    background-color: rgba(77,77,77,1)!important;
+	    background-color: #4D4D4D;  /* IE */
 	    padding: 9px;
 	    width: 100%!important;
 	    color: white!important;
@@ -1914,7 +1929,7 @@ position: relative;
 	    position: relative;
 	    left: 15px;
 	    letter-spacing: 3px;
-	    font-family: Raleway-Bold;
+	    font-family: font-bold;
 	}
 
 	#acc-edit #acc-edit-button{
@@ -1951,7 +1966,7 @@ position: relative;
 	    bottom: 30px;
 	    left: 15px;
 	    color: green;
-	    /* font-family: Raleway-Bold; */
+	    /* font-family: font-bold; */
 	    letter-spacing: 1px;
 	}
 
@@ -1972,7 +1987,7 @@ position: relative;
 	    bottom: 30px;
 	    left: 15px;
 	    color: green;
-	    /* font-family: Raleway-Bold; */
+	    /* font-family: font-bold; */
 	    letter-spacing: 1px;
 	}
 
@@ -1981,6 +1996,7 @@ position: relative;
 	    margin-top: -5px;
 	    display: inline-block;
 		max-width: 100%;
+		display: none;
 		/* overflow:visible; */
 	}
 
@@ -2021,4 +2037,15 @@ position: relative;
 	}
 	.wrapper-employe-show{
 		display: block !important;
+	}
+
+
+	.calc-error {
+	    position: absolute;
+	    /* margin-left: 10px; */
+	    margin-top: 5px;
+	    color: red;
+	    font-family: font-bold !important;
+	    display: block;
+	    font-size: 11px;
 	}

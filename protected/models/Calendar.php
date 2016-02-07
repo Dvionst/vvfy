@@ -27,7 +27,7 @@ class Calendar extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'Calendar';
+		return 'calendar';
 	}
 
 	/**

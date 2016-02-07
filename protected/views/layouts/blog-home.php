@@ -6,8 +6,9 @@
 	->limit(3)
 	->queryAll();
 ?>
+<div id="fourth">
 	<div class="wrapper-down" id="blog" >
-		<h2>PREMIUM BLOG</h2>
+		<h2>BLOG</h2>
 		<a title="back to top" class="wadah lm2" href="#first">
 		</a>
 		
@@ -126,11 +127,11 @@
 				</div>
 			</div>
 			<div class="box-link">
-				<p class="blog-title blog-link" style="margin-left:15px;">
 				<a style="color:white" href="<?php echo Yii::app()->createurl('blog/index') ?>">
+				<p class="blog-title blog-link" style="margin-left:15px;">
 					GO TO <br><br> BLOG PAGE
-				</a>
 				</p>
+				</a>
 			</div>
 		</div>
 
@@ -138,5 +139,5 @@
 	<?php //endfor; ?>
 	
 
-</div>
+	</div>
 </div>

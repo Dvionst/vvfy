@@ -9,6 +9,11 @@
 <meta name="keywords" content="vvfy.me,3d,3D,architecture,rendering,archviz,lebanon,indonesia,3dmax,vray">
 <meta content='INDEX, FOLLOW' name='ROBOTS'/>
 <meta name="author" content="Jad Fenergi">
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+
 <link rel="apple-touch-icon" href="<?php echo Yii::app()->request->baseUrl; ?>/img/apple_icons_57x57.png">
 <link rel="apple-touch-icon" sizes="72x72" href="<?php echo Yii::app()->request->baseUrl; ?>/img/apple_icons_72x72.png">
 <link rel="apple-touch-icon" sizes="114x114" href="<?php echo Yii::app()->request->baseUrl; ?>/img/apple_icons_114x114.png">
@@ -32,8 +37,9 @@
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/mobile.css" type="text/css" media="only screen and (max-width: 760px) and (min-width: 400px)" />
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/tab.css" type="text/css" media="only screen and (max-width: 900px) and (min-width: 760px)" />
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/computer.css" type="text/css" media="only screen and (min-width: 900px) and (max-width: 10000px)" />
-<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/all.css" type="text/css" media="only screen and (min-width: 900px) and (max-width: 10000px)" />
-
+<!--[if lt IE 9]>
+  <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/computer.css"/>
+<![endif]-->
 <style>
 @media screen and (max-width: 1290px ) {
 	.icon{
@@ -47,11 +53,12 @@
 -->
 <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>img/gambar.png" type="image/x-icon"/>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js"></script>
+
 <!--
 <script src="js/jquery.1.7.0.js"></script>
 <script src="js/jquery.lazyload.js"></script>
 -->
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/isotope-docs.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/isotope.pkgd.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-ui.js"></script>
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery-ui.css">
 <!-- <script src="js/iscroll.js"></script> 
@@ -69,6 +76,7 @@
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/custom.css" type="text/css" media="all" />
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/tooltip.css" type="text/css" media="all" />
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.lazyloadxt.fadein.css">
+<script src="<?php echo Yii::app()->request->baseurl; ?>/js/imagesloaded.pkgd.min.js"></script>
 <!--
 <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.lazyloadxt.spinner.css">
 -->
@@ -80,6 +88,8 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/theme.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/main.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/packery-mode.pkgd.min.js"></script>
+
+
 
 <meta charset='utf-8'>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" >
@@ -96,36 +106,74 @@
 </head>
 <body>
 <div id="element" class="introLoading"></div>
-<style>
-#overlay{
-  height:100vh;
-  background: black;
-  position: fixed;
-  resize: vertical;
-  overflow: auto;
-}
-#overlay .loader {
-  position: absolute;
-  top: 40%;
-  left: 20px;
-  right: 20px;
-  background: black;
-  color: white;
-  transform: translateY(-50%);
-  overflow: auto;
-}
-</style>
 <script>
-// alert($(window).width());
+var IsLeftMenu = false;
+$(document).ready(function() {
+    var page = $(document);  // set to the main content of the page   
+    $(window).mousewheel(function(event, delta, deltaX, deltaY){
+        if(!IsLeftMenu){
+          if (delta < 0) page.scrollTop(page.scrollTop() + 100);
+          else if (delta > 0) page.scrollTop(page.scrollTop() - 100);
+
+          var scroll = $(this).scrollTop();
+          var premium = $("#premium").offset().top;
+          var work = $("#our-work").offset().top;
+          var blog = $("#blog").offset().top;
+          var team = $("#team").offset().top;
+          var go = 0;
+          if(delta<0){
+            if((scroll>(premium-100))&&(scroll<(premium-0))){
+              go = premium;
+            }else if((scroll>(work-100))&&(scroll<(work-0))){
+              go = work;
+            }else if((scroll>(blog-100))&&(scroll<(blog-0))){
+              go = blog;
+            }else if((scroll>(team-100))&&(scroll<(team-0))){
+              go = team;
+            }
+          }else{
+            if((scroll>(premium))&&(scroll<(premium+100))){
+              go = premium;
+            }else if((scroll>(work))&&(scroll<(work+100))){
+              go = work;
+            }else if((scroll>(blog))&&(scroll<(blog+100))){
+              go = blog;
+            }else if((scroll>(team))&&(scroll<(team+100))){
+              go = team;
+            }
+          }
+          if(go>0){
+            $('html, body').animate({
+               scrollTop: go
+              }, 0);
+          }
+          return false;
+        }
+    });
+
+    $(document).imagesLoaded( function(){
+      $('#overlay').fadeOut();
+      location.hash = "first"
+    });
+
+
+});    
+  // var scrollTimerHandle = "";
+
+  // $(window).scroll(function() {
+  //   var newScrollPosition = parseInt($(this).scrollTop() / 84) * 84,
+  //       _this = $(this);
+  //   clearInterval(scrollTimerHandle);
+  //   scrollTimerHandle  = setTimeout(function() {
+  //     //alert($(this).scrollTop());
+  //      $(this).scrollTop(newScrollPosition);
+  //   }, 100);
+  // })
 </script>
-<div id="overlay" >
-		<div class="loader">
-			 <img style="width:120px;height:70px;" src="<?php echo Yii::app()->request->baseUrl; ?>/img/gambar.png" alt="Loading" /><br>
-			 <img style="width:40px;height:40px;" src="<?php echo Yii::app()->request->baseUrl; ?>/img/big-loader.gif" alt="Loading" />
-		</div>
-</div>
+
 <?php 
- include('left-menu.php');
+  include('overlay.php');
+  include('left-menu.php');
 ?>
 <a title="menu" href="javascript:void(0)"  class="control_toggle"> </a>
 <?php 
@@ -136,4 +184,13 @@
 ?>
 
 </body>
+<script> 
+  window.onload=function(){
+    if(navigator.appName == "Microsoft Internet Explorer"){ 
+      var height = $(window).height();
+      $('.wrap-v').css({'height':height+'px'});
+    }
+  }
+</script>
 </html>
+
